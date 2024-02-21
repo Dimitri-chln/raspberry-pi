@@ -48,7 +48,7 @@ const command: Command = {
 
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
-			case "liste": {
+			case "list": {
 				interaction.reply({
 					embeds: [
 						{
