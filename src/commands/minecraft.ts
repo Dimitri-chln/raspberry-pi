@@ -25,6 +25,7 @@ const command: Command = {
 					name: "server",
 					description: "Le nom du serveur à lancer",
 					required: true,
+					autocomplete: true,
 				},
 			],
 		},
@@ -38,6 +39,7 @@ const command: Command = {
 					name: "server",
 					description: "Le nom du serveur à lancer",
 					required: true,
+					autocomplete: true,
 				},
 			],
 		},
@@ -101,8 +103,8 @@ const command: Command = {
 					});
 				});
 
-				childProcess.stdout.on("data", (data) => console.log(`[MINECRAFT:${server}] ${data}`));
-				childProcess.stderr.on("data", (data) => console.error(`[MINECRAFT:${server}] ${data}`));
+				childProcess.stdout.on("data", (data) => console.log(`[minecraft:${server}] ${data}`.trim()));
+				childProcess.stderr.on("data", (data) => console.error(`[minecraft:${server}] ${data}`.trim()));
 
 				childProcess.on("exit", (code, signal) => {
 					Util.minecraftServers.delete(server);
