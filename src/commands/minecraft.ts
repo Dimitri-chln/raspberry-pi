@@ -79,7 +79,9 @@ const command: Command = {
 					return;
 				}
 
-				const childProcess = exec(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "start.sh"));
+				const childProcess = exec(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
+					cwd: Path.join(process.env.MINECRAFT_SERVERS_PATH, server),
+				});
 
 				childProcess.on("spawn", () => {
 					Util.minecraftServers.set(server, childProcess);
