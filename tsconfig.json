@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+		"module": "commonjs",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"target": "es2021",
+		"downlevelIteration": true,
+		"skipLibCheck": true
+	},
+	"include": ["src/**/*", "src/assets/*.json", "src/commands/pokemon/hunt.ts"],
+	"exclude": ["node_modules/**/*", "src-old/**/*"]
+}

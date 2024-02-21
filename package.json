@@ -1,0 +1,25 @@
+{
+	"name": "raspberry-pi",
+	"version": "0.0.1",
+	"description": "",
+	"main": "dist/index.js",
+	"scripts": {
+		"start": "node .",
+		"build": "tsc"
+	},
+	"devDependencies": {
+		"typescript": "^5.3.3"
+	},
+	"engines": {
+		"node": ">=16.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Dimitri-chln/raspberry-pi.git"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"discord.js": "^14.14.1",
+		"dotenv": "^16.4.5"
+	}
+}
