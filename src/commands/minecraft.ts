@@ -60,6 +60,7 @@ const command: Command = {
 							fields: servers.map((server) => ({
 								name: server,
 								value: `__**En ligne :**__ ${Util.minecraftServers.has(server) ? "oui" : "non"}`,
+								inline: true,
 							})),
 						},
 					],
