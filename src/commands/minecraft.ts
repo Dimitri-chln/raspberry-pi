@@ -1,5 +1,6 @@
 import { Command } from "../types";
 import { ApplicationCommandOptionType } from "discord.js";
+import Util from "../Util";
 
 import Fs from "fs";
 
@@ -9,17 +10,17 @@ const command: Command = {
 	options: [
 		{
 			type: ApplicationCommandOptionType.Subcommand,
-			name: "liste",
+			name: "list",
 			description: "Voir la liste des serveurs Minecraft de la Raspberry",
 		},
 		{
 			type: ApplicationCommandOptionType.Subcommand,
-			name: "démarrer",
+			name: "start",
 			description: "Démarrer un serveur Minecraft de la Raspberry",
 		},
 		{
 			type: ApplicationCommandOptionType.Subcommand,
-			name: "arrêter",
+			name: "stop",
 			description: "Arrêter un serveur Minecraft de la Raspberry",
 		},
 	],
@@ -27,7 +28,37 @@ const command: Command = {
 	async run(interaction) {
 		const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
 
-		interaction.reply(servers.join(", "));
+		const subcommand = interaction.options.getSubcommand(true);
+		switch (subcommand) {
+			case "liste": {
+				interaction.reply({
+					embeds: [
+						{
+							author: {
+								name: "Serveurs Minecraft",
+								icon_url: interaction.client.user.displayAvatarURL(),
+							},
+							color: Util.config.DEFAULT_EMBED_COLOR,
+							fields: servers.map((server) => {
+								return {
+									name: server,
+									value: `En ligne : ???`,
+								};
+							}),
+						},
+					],
+				});
+				break;
+			}
+
+			case "start": {
+				break;
+			}
+
+			case "stop": {
+				break;
+			}
+		}
 	},
 };
 
