@@ -92,6 +92,7 @@ client.on("interactionCreate", async (interaction) => {
 
 		case InteractionType.ApplicationCommandAutocomplete: {
 			const autocompleteHandler = Util.autocompleteHandlers.get(interaction.commandName);
+
 			if (!autocompleteHandler) return;
 
 			const subCommandGroup = interaction.options.getSubcommandGroup(false);
@@ -104,6 +105,8 @@ client.on("interactionCreate", async (interaction) => {
 					option.subCommand === subCommand &&
 					option.name === focusedOption.name,
 			);
+
+			if (!option) return;
 
 			const results =
 				option.type === ApplicationCommandOptionType.String
