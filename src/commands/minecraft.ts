@@ -81,6 +81,14 @@ const command: Command = {
 					return;
 				}
 
+				if (Util.minecraftServers.has(server)) {
+					interaction.reply({
+						content: "Ce serveur est déjà lancé",
+						ephemeral: true,
+					});
+					return;
+				}
+
 				const childProcess = exec(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
 					cwd: Path.join(process.env.MINECRAFT_SERVERS_PATH, server),
 				});
