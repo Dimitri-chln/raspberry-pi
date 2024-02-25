@@ -114,7 +114,7 @@ const command: Command = {
 				childProcess.stdout.on("data", (data) => {
 					console.log(`[minecraft:${server}] ${data}`.trim());
 
-					if (/Done (\d+.\d+s)!/.test(data)) {
+					if (/Done \(\d+.\d+s\)!/.test(data)) {
 						interaction.editReply({
 							embeds: [
 								{
