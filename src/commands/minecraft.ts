@@ -135,19 +135,6 @@ const command: Command = {
 				childProcess.on("exit", (code, signal) => {
 					Util.minecraftServers.delete(server);
 					console.log(`Minecraft server ${server} stopped with exit code ${code}`);
-
-					interaction.editReply({
-						embeds: [
-							{
-								author: {
-									name: "Serveurs Minecraft",
-									icon_url: interaction.client.user.displayAvatarURL(),
-								},
-								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${server}\`** a été arrêté`,
-							},
-						],
-					});
 				});
 				break;
 			}
