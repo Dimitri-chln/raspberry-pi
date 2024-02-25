@@ -95,7 +95,7 @@ const command: Command = {
 
 				childProcess.on("spawn", () => {
 					Util.minecraftServers.set(server, childProcess);
-					console.log(`Minecraft server ${server} started`);
+					console.log(`Minecraft server ${server} is starting`);
 
 					interaction.reply({
 						embeds: [
@@ -105,18 +105,49 @@ const command: Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${server}\`** a été lancé avec succès`,
+								description: `Le serveur **\`${server}\`** est en cours de lancement...`,
 							},
 						],
 					});
 				});
 
-				childProcess.stdout.on("data", (data) => console.log(`[minecraft:${server}] ${data}`.trim()));
+				childProcess.stdout.on("data", (data) => {
+					console.log(`[minecraft:${server}] ${data}`.trim());
+
+					if (/Done (\d+.\d+s)!/.test(data)) {
+						interaction.editReply({
+							embeds: [
+								{
+									author: {
+										name: "Serveurs Minecraft",
+										icon_url: interaction.client.user.displayAvatarURL(),
+									},
+									color: Util.config.DEFAULT_EMBED_COLOR,
+									description: `Le serveur **\`${server}\`** a été lancé avec succès`,
+								},
+							],
+						});
+					}
+				});
+
 				childProcess.stderr.on("data", (data) => console.error(`[minecraft:${server}] ${data}`.trim()));
 
 				childProcess.on("exit", (code, signal) => {
 					Util.minecraftServers.delete(server);
 					console.log(`Minecraft server ${server} stopped with exit code ${code}`);
+
+					interaction.editReply({
+						embeds: [
+							{
+								author: {
+									name: "Serveurs Minecraft",
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: Util.config.DEFAULT_EMBED_COLOR,
+								description: `Le serveur **\`${server}\`** a été arrêté`,
+							},
+						],
+					});
 				});
 				break;
 			}
@@ -141,21 +172,38 @@ const command: Command = {
 					return;
 				}
 
-				const success = childProcess.kill();
-
-				interaction.reply({
-					embeds: [
-						{
-							author: {
-								name: "Serveurs Minecraft",
-								icon_url: interaction.client.user.displayAvatarURL(),
+				childProcess.on("exit", (code, signal) => {
+					interaction.editReply({
+						embeds: [
+							{
+								author: {
+									name: "Serveurs Minecraft",
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: Util.config.DEFAULT_EMBED_COLOR,
+								description: `Le serveur **\`${server}\`** a été arrêté avec succès`,
 							},
-							color: Util.config.DEFAULT_EMBED_COLOR,
-							description: success
-								? `Le serveur **\`${server}\`** a été arrêté avec succès`
-								: `Le serveur **\`${server}\`** n'a pas pu être arrêté`,
-						},
-					],
+						],
+					});
+				});
+
+				childProcess.stdin.write("/stop", (error) => {
+					if (error) console.error(error);
+
+					interaction.reply({
+						embeds: [
+							{
+								author: {
+									name: "Serveurs Minecraft",
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: Util.config.DEFAULT_EMBED_COLOR,
+								description: error
+									? `Le serveur **\`${server}\`** n'a pas pu être arrêté`
+									: `Le serveur **\`${server}\`** est en cours de sauvegarde...`,
+							},
+						],
+					});
 				});
 				break;
 			}
