@@ -187,7 +187,7 @@ const command: Command = {
 					});
 				});
 
-				childProcess.stdin.write("/stop", (error) => {
+				childProcess.stdin.write("/stop\n", (error) => {
 					if (error) console.error(error);
 
 					interaction.reply({
