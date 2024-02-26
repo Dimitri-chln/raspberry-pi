@@ -48,6 +48,8 @@ const command: Command = {
 	async run(interaction) {
 		const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
 
+		const MAX_ONLINE_SERVERS = 1;
+
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
 			case "list": {
@@ -84,6 +86,14 @@ const command: Command = {
 				if (Util.minecraftServers.has(server)) {
 					interaction.reply({
 						content: "Ce serveur est déjà lancé",
+						ephemeral: true,
+					});
+					return;
+				}
+
+				if (Util.minecraftServers.size >= MAX_ONLINE_SERVERS) {
+					interaction.reply({
+						content: "Le nombre maximal de serveurs en ligne a été atteint",
 						ephemeral: true,
 					});
 					return;
