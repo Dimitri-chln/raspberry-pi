@@ -2,6 +2,7 @@ import { AutocompleteHandler } from "../types";
 import { ApplicationCommandOptionType } from "discord.js";
 
 import Fs from "fs";
+import Util from "../Util";
 
 const autocompleteHandler: AutocompleteHandler = {
 	name: "minecraft",
@@ -30,9 +31,9 @@ const autocompleteHandler: AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+				const servers = Util.minecraftServers;
 
-				return servers.map((server) => ({
+				return servers.map((_, server) => ({
 					name: server,
 					value: server,
 				}));
