@@ -141,6 +141,8 @@ const command: Command = {
 				childProcess.stderr.on("data", (data) => console.error(`[minecraft:${server}] ${data}`.trim()));
 
 				childProcess.on("exit", (code, signal) => {
+					if (!code) return;
+
 					Util.minecraftServers.delete(server);
 					console.log(`Minecraft server ${server} stopped with exit code ${code}`);
 				});
