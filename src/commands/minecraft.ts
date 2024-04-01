@@ -69,8 +69,7 @@ const command: Command = {
 
 	async run(interaction) {
 		const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
-		const loadingEmoji = interaction.client.emojis.cache.find((e) => e.name === "loading");
-		console.log(loadingEmoji.id);
+		const loadingEmoji = interaction.client.emojis.cache.get(Util.config.LOADING_EMOJI_ID);
 
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
@@ -269,15 +268,6 @@ const command: Command = {
 					return;
 				}
 
-				if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
-					Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
-
-				const now = new Date();
-				const yearString = now.getFullYear().toString().padStart(4, "0");
-				const monthString = now.getMonth().toString().padStart(2, "0");
-				const dayString = now.getDate().toString().padStart(2, "0");
-				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
-
 				interaction.reply({
 					embeds: [
 						{
@@ -291,6 +281,15 @@ const command: Command = {
 					],
 				});
 
+				if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
+					Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+
+				const now = new Date();
+				const yearString = now.getFullYear().toString().padStart(4, "0");
+				const monthString = now.getMonth().toString().padStart(2, "0");
+				const dayString = now.getDate().toString().padStart(2, "0");
+				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
+
 				Fs.cpSync(
 					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "world"),
 					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups", backupName),
@@ -299,7 +298,7 @@ const command: Command = {
 					},
 				);
 
-				interaction.reply({
+				interaction.editReply({
 					embeds: [
 						{
 							author: {
