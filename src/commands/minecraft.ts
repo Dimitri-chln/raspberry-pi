@@ -268,7 +268,7 @@ const command: Command = {
 					return;
 				}
 
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
