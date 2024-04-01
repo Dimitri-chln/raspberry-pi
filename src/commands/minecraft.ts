@@ -95,8 +95,7 @@ const command: Command = {
 
 			case "start": {
 				const server = interaction.options.getString("server", true);
-				const backup = interaction.options.getString("server", false);
-				console.log(backup);
+				const backup = interaction.options.getString("backup", false);
 
 				if (!servers.includes(server)) {
 					interaction.reply({
