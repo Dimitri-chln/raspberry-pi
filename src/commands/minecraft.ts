@@ -306,7 +306,7 @@ const command: Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: Util.config.DEFAULT_EMBED_COLOR,
-							description: `Une nouvelle backup pour le serveur **\`${server}\`** a été créée\n> **\`${backupName}\`**)`,
+							description: `Une nouvelle backup pour le serveur **\`${server}\`** a été créée\n> **\`${backupName}\`**`,
 						},
 					],
 				});
