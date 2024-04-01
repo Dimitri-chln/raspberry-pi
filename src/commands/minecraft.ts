@@ -1,10 +1,11 @@
 import { Command } from "../types";
-import { ApplicationCommandOptionType } from "discord.js";
 import Util from "../Util";
 
 import Fs from "fs";
 import Path from "path";
 import { exec } from "child_process";
+import { ApplicationCommandOptionType } from "discord.js";
+import ServerProperties from "../util/ServerProperties";
 
 const command: Command = {
 	name: "minecraft",
@@ -27,6 +28,13 @@ const command: Command = {
 					required: true,
 					autocomplete: true,
 				},
+				{
+					type: ApplicationCommandOptionType.String,
+					name: "backup",
+					description: "Le nom d'une backup à lancer",
+					required: false,
+					autocomplete: true,
+				},
 			],
 		},
 		{
@@ -38,6 +46,20 @@ const command: Command = {
 					type: ApplicationCommandOptionType.String,
 					name: "server",
 					description: "Le nom du serveur à lancer",
+					required: true,
+					autocomplete: true,
+				},
+			],
+		},
+		{
+			type: ApplicationCommandOptionType.Subcommand,
+			name: "backup",
+			description: "Créer une backup (en créatif) d'un serveur Minecraft de la Raspberry",
+			options: [
+				{
+					type: ApplicationCommandOptionType.String,
+					name: "server",
+					description: "Le nom du serveur à sauvegarder",
 					required: true,
 					autocomplete: true,
 				},
@@ -72,6 +94,7 @@ const command: Command = {
 
 			case "start": {
 				const server = interaction.options.getString("server", true);
+				const backup = interaction.options.getString("server", false);
 
 				if (!servers.includes(server)) {
 					interaction.reply({
@@ -96,6 +119,34 @@ const command: Command = {
 					});
 					return;
 				}
+
+				const serverProperties = new ServerProperties(
+					Fs.readFileSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "server.properties")).toString(),
+				);
+
+				if (backup) {
+					if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
+						Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+
+					const backups = Fs.readdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+
+					if (!backups.includes(backup)) {
+						interaction.reply({
+							content: "Cette backup n'existe pas",
+							ephemeral: true,
+						});
+						return;
+					}
+
+					serverProperties.data["level-name"] = `backups/${backup}`;
+				} else {
+					serverProperties.data["level-name"] = "world";
+				}
+
+				Fs.writeFileSync(
+					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "server.properties"),
+					serverProperties.stringify(),
+				);
 
 				const childProcess = exec(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
 					cwd: Path.join(process.env.MINECRAFT_SERVERS_PATH, server),
@@ -203,6 +254,48 @@ const command: Command = {
 					});
 				});
 				break;
+			}
+
+			case "backup": {
+				const server = interaction.options.getString("server", true);
+
+				if (!servers.includes(server)) {
+					interaction.reply({
+						content: "Ce serveur n'existe pas",
+						ephemeral: true,
+					});
+					return;
+				}
+
+				if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
+					Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+
+				const now = new Date();
+				const yearString = now.getFullYear().toString().padStart(4, "0");
+				const monthString = now.getMonth().toString().padStart(2, "0");
+				const dayString = now.getDate().toString().padStart(2, "0");
+				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
+
+				Fs.cpSync(
+					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "world"),
+					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups", backupName),
+					{
+						recursive: true,
+					},
+				);
+
+				interaction.reply({
+					embeds: [
+						{
+							author: {
+								name: "Serveurs Minecraft",
+								icon_url: interaction.client.user.displayAvatarURL(),
+							},
+							color: Util.config.DEFAULT_EMBED_COLOR,
+							description: `Une nouvelle backup pour le serveur **\`${server}\`** a été créée (**\`${backupName}\`**)`,
+						},
+					],
+				});
 			}
 		}
 	},

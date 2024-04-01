@@ -1,8 +1,9 @@
 import { AutocompleteHandler } from "../types";
-import { ApplicationCommandOptionType } from "discord.js";
+import Util from "../Util";
 
 import Fs from "fs";
-import Util from "../Util";
+import Path from "path";
+import { ApplicationCommandOptionType } from "discord.js";
 
 const autocompleteHandler: AutocompleteHandler = {
 	name: "minecraft",
@@ -20,6 +21,26 @@ const autocompleteHandler: AutocompleteHandler = {
 				return servers.map((server) => ({
 					name: server,
 					value: server,
+				}));
+			},
+		},
+		{
+			subCommandGroup: null,
+			subCommand: "start",
+			name: "backup",
+			type: ApplicationCommandOptionType.String,
+			filterType: "CONTAINS",
+
+			run: async (interaction, value) => {
+				const server = interaction.options.getString("server", false);
+
+				if (!server || !Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server))) return;
+
+				const backups = Fs.readdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+
+				return backups.map((backup) => ({
+					name: backup,
+					value: backup,
 				}));
 			},
 		},
