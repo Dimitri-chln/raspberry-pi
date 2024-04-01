@@ -39,6 +39,7 @@ export default class ServerProperties {
 
 	private _stringifyValue(val: string) {
 		if (val === null) return "";
+		if (typeof val === "string") return val;
 		return JSON.stringify(val);
 	}
 
