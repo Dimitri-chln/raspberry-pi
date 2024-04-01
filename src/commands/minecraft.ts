@@ -69,6 +69,8 @@ const command: Command = {
 
 	async run(interaction) {
 		const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+		const loadingEmoji = interaction.client.emojis.cache.find((e) => e.name === "loading");
+		console.log(loadingEmoji.id);
 
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
@@ -164,7 +166,7 @@ const command: Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${server}\`** est en cours de lancement...`,
+								description: `Le serveur **\`${server}\`** est en cours de lancement ${loadingEmoji}`,
 							},
 						],
 					});
@@ -248,7 +250,7 @@ const command: Command = {
 								color: Util.config.DEFAULT_EMBED_COLOR,
 								description: error
 									? `Le serveur **\`${server}\`** n'a pas pu être arrêté`
-									: `Le serveur **\`${server}\`** est en cours de sauvegarde...`,
+									: `Le serveur **\`${server}\`** est en cours de sauvegarde ${loadingEmoji}`,
 							},
 						],
 					});
@@ -275,6 +277,19 @@ const command: Command = {
 				const monthString = now.getMonth().toString().padStart(2, "0");
 				const dayString = now.getDate().toString().padStart(2, "0");
 				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
+
+				interaction.reply({
+					embeds: [
+						{
+							author: {
+								name: "Serveurs Minecraft",
+								icon_url: interaction.client.user.displayAvatarURL(),
+							},
+							color: Util.config.DEFAULT_EMBED_COLOR,
+							description: `Création d'une nouvelle backup pour le serveur **\`${server}\`** ${loadingEmoji}`,
+						},
+					],
+				});
 
 				Fs.cpSync(
 					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "world"),

@@ -60,6 +60,22 @@ const autocompleteHandler: AutocompleteHandler = {
 				}));
 			},
 		},
+		{
+			subCommandGroup: null,
+			subCommand: "backup",
+			name: "server",
+			type: ApplicationCommandOptionType.String,
+			filterType: "CONTAINS",
+
+			run: async (interaction, value) => {
+				const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+
+				return servers.map((server) => ({
+					name: server,
+					value: server,
+				}));
+			},
+		},
 	],
 };
 
