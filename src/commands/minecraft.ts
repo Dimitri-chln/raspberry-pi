@@ -54,7 +54,7 @@ const command: Command = {
 		{
 			type: ApplicationCommandOptionType.Subcommand,
 			name: "backup",
-			description: "Créer une backup (en créatif) d'un serveur Minecraft de la Raspberry",
+			description: "Créer une backup d'un serveur Minecraft de la Raspberry",
 			options: [
 				{
 					type: ApplicationCommandOptionType.String,
