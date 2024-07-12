@@ -1,7 +1,5 @@
-import { MinecraftServerProperties } from "../types";
-
 export default class ServerProperties {
-	data: Partial<MinecraftServerProperties>;
+	data: Partial<DiscordBot.MinecraftServerProperties>;
 
 	constructor(file: string) {
 		this.data = this._parse(file);
@@ -19,8 +17,8 @@ export default class ServerProperties {
 		}
 	}
 
-	private _parse(input: string): Partial<MinecraftServerProperties> {
-		const output: Partial<MinecraftServerProperties> = {};
+	private _parse(input: string): Partial<DiscordBot.MinecraftServerProperties> {
+		const output: Partial<DiscordBot.MinecraftServerProperties> = {};
 
 		input.split(/[\r\n]+/g).forEach((line) => {
 			if (line[0] === "#" || line.indexOf("=") < 0) return; // just a comment
