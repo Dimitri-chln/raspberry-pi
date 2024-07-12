@@ -95,7 +95,6 @@ const command: DiscordBot.Command = {
 												: "désactivée"
 									  }`
 									: `__**En cours d'exécution :**__ ${Util.runningProcesses.has(processConfig.name) ? "oui" : "non"}`,
-								inline: true,
 							})),
 						},
 					],
