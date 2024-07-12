@@ -26,11 +26,11 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 
 function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const options: ChildProcess.ExecOptions = {
+		shell: "bash",
 		cwd: processConfig.workingDirectory,
 	};
 
-	const childProcess = ChildProcess.exec(`${processConfig.workingDirectory}/start.sh`, options, (err) => {
-		console.error(`${processConfig.workingDirectory}/start.sh`);
+	const childProcess = ChildProcess.exec("start.sh", options, (err) => {
 		console.error(`Couldn't start process ${processConfig.name}: ${err}`);
 	});
 
