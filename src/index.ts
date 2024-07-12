@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import Os from "node:os";
 import ChildProcess from "node:child_process";
 import { CronJob } from "cron";
 
@@ -28,7 +29,7 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 
 function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const options: ChildProcess.ExecOptions = {
-		cwd: processConfig.workingDirectory,
+		cwd: `${Os.homedir()}/${processConfig.workingDirectory}`,
 		env: process.env,
 	};
 

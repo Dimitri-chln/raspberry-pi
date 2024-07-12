@@ -2,6 +2,7 @@ import Util from "../Util";
 
 import Fs from "node:fs";
 import Path from "node:path";
+import Os from "node:os";
 import ChildProcess from "node:child_process";
 import { ApplicationCommandOptionType } from "discord.js";
 import ServerProperties from "../util/ServerProperties";
@@ -144,7 +145,7 @@ const command: DiscordBot.Command = {
 				}
 
 				Fs.writeFileSync(
-					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "server.properties"),
+					Path.join(`${Os.homedir()}/${process.env.MINECRAFT_SERVERS_PATH}`, server, "server.properties"),
 					serverProperties.stringify(),
 				);
 

@@ -1,23 +1,23 @@
 [
 	{
 		"name": "mayze-bot",
-		"workingDirectory": "~/mayze/mayze-bot"
+		"workingDirectory": "mayze/mayze-bot"
 	},
 	{
 		"name": "mayze-web",
-		"workingDirectory": "~/mayze/mayze-web"
+		"workingDirectory": "mayze/mayze-web"
 	},
 	{
 		"name": "mayze-web-semantix",
-		"workingDirectory": "~/mayze/mayze-web-semantix"
+		"workingDirectory": "mayze/mayze-web-semantix"
 	},
 	{
 		"name": "spotify-liked-sync",
-		"workingDirectory": "~/github/spotify-liked-sync"
+		"workingDirectory": "github/spotify-liked-sync"
 	},
 	{
 		"name": "cloudflare-dns",
-		"workingDirectory": "~/github/cloudflare-dns",
+		"workingDirectory": "github/cloudflare-dns",
 		"cronTime": "*/5 * * * *"
 	}
 ]
