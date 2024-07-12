@@ -6,8 +6,6 @@ import { CronJob } from "cron";
 import Util from "./Util";
 import discordBot from "./discord-bot";
 
-console.log(process.env);
-
 Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 	console.log(`Configuring process ${processConfig.name}...`);
 
@@ -31,6 +29,7 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const options: ChildProcess.ExecOptions = {
 		cwd: processConfig.workingDirectory,
+		env: process.env,
 	};
 
 	const childProcess = ChildProcess.exec("start.sh", options, (err) => {
