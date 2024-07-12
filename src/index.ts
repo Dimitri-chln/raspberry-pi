@@ -5,6 +5,8 @@ import Util from "./Util";
 import discordBot from "./discord-bot";
 
 Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
+	console.log(`Configuring process ${processConfig.name}`);
+
 	// Process that start immediately
 	if (!processConfig.cronTime) return spawnChildProcess(processConfig);
 
@@ -22,7 +24,7 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 	Util.runningJobs.set(processConfig.name, job);
 });
 
-function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig) {
+function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const childProcess = ChildProcess.exec(Util.config.START_COMMAND, {
 		cwd: processConfig.workingDirectory,
 	});
