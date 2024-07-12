@@ -11,7 +11,7 @@ import {
 	Partials,
 } from "discord.js";
 
-import Util from "./Util";
+import Util from "./DiscordUtil";
 
 const client = new Client({
 	intents: [

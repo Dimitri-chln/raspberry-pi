@@ -1,4 +1,4 @@
-import Util from "../Util";
+import DiscordUtil from "../DiscordUtil";
 
 import Fs from "node:fs";
 import Path from "node:path";
@@ -68,9 +68,9 @@ const command: DiscordBot.Command = {
 	],
 
 	async run(interaction) {
-		const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
+		const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
 		const servers = Fs.readdirSync(minecraftServersPath);
-		const loadingEmoji = interaction.client.emojis.cache.get(Util.config.LOADING_EMOJI_ID);
+		const loadingEmoji = interaction.client.emojis.cache.get(DiscordUtil.config.LOADING_EMOJI_ID);
 
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
@@ -82,10 +82,10 @@ const command: DiscordBot.Command = {
 								name: "Serveurs Minecraft",
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
-							color: Util.config.DEFAULT_EMBED_COLOR,
+							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 							fields: servers.map((server) => ({
 								name: server,
-								value: `__**En ligne :**__ ${Util.minecraftServers.has(server) ? "oui" : "non"}`,
+								value: `__**En ligne :**__ ${DiscordUtil.minecraftServers.has(server) ? "oui" : "non"}`,
 								inline: true,
 							})),
 						},
@@ -106,7 +106,7 @@ const command: DiscordBot.Command = {
 					return;
 				}
 
-				if (Util.minecraftServers.has(server)) {
+				if (DiscordUtil.minecraftServers.has(server)) {
 					interaction.reply({
 						content: "Ce serveur est déjà lancé",
 						ephemeral: true,
@@ -114,7 +114,7 @@ const command: DiscordBot.Command = {
 					return;
 				}
 
-				if (Util.minecraftServers.size >= Util.config.MAX_MINECRAFT_ONLINE_SERVERS) {
+				if (DiscordUtil.minecraftServers.size >= DiscordUtil.config.MAX_MINECRAFT_ONLINE_SERVERS) {
 					interaction.reply({
 						content: "Le nombre maximal de serveurs en ligne a été atteint",
 						ephemeral: true,
@@ -152,7 +152,7 @@ const command: DiscordBot.Command = {
 				});
 
 				childProcess.on("spawn", () => {
-					Util.minecraftServers.set(server, childProcess);
+					DiscordUtil.minecraftServers.set(server, childProcess);
 					console.log(`Minecraft server ${server} is starting`);
 
 					interaction.reply({
@@ -162,7 +162,7 @@ const command: DiscordBot.Command = {
 									name: "Serveurs Minecraft",
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
-								color: Util.config.DEFAULT_EMBED_COLOR,
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 								description: `Le serveur **\`${server}\`** est en cours de lancement ${loadingEmoji}`,
 							},
 						],
@@ -178,7 +178,7 @@ const command: DiscordBot.Command = {
 										name: "Serveurs Minecraft",
 										icon_url: interaction.client.user.displayAvatarURL(),
 									},
-									color: Util.config.DEFAULT_EMBED_COLOR,
+									color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 									description: `Le serveur **\`${server}\`** a été lancé avec succès`,
 								},
 							],
@@ -189,7 +189,7 @@ const command: DiscordBot.Command = {
 				childProcess.on("exit", (code, signal) => {
 					if (!Number.isInteger(code)) return;
 
-					Util.minecraftServers.delete(server);
+					DiscordUtil.minecraftServers.delete(server);
 					console.log(`Minecraft server ${server} stopped with exit code ${code}`);
 				});
 				break;
@@ -206,7 +206,7 @@ const command: DiscordBot.Command = {
 					return;
 				}
 
-				const childProcess = Util.minecraftServers.get(server);
+				const childProcess = DiscordUtil.minecraftServers.get(server);
 				if (!childProcess) {
 					interaction.reply({
 						content: "Ce serveur n'est pas lancé",
@@ -223,7 +223,7 @@ const command: DiscordBot.Command = {
 									name: "Serveurs Minecraft",
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
-								color: Util.config.DEFAULT_EMBED_COLOR,
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 								description: `Le serveur **\`${server}\`** a été arrêté avec succès`,
 							},
 						],
@@ -240,7 +240,7 @@ const command: DiscordBot.Command = {
 									name: "Serveurs Minecraft",
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
-								color: Util.config.DEFAULT_EMBED_COLOR,
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 								description: error
 									? `Le serveur **\`${server}\`** n'a pas pu être arrêté`
 									: `Le serveur **\`${server}\`** est en cours de sauvegarde ${loadingEmoji}`,
@@ -269,7 +269,7 @@ const command: DiscordBot.Command = {
 								name: "Serveurs Minecraft",
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
-							color: Util.config.DEFAULT_EMBED_COLOR,
+							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 							description: `Création d'une nouvelle backup pour le serveur **\`${server}\`** ${loadingEmoji}`,
 						},
 					],
@@ -299,7 +299,7 @@ const command: DiscordBot.Command = {
 								name: "Serveurs Minecraft",
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
-							color: Util.config.DEFAULT_EMBED_COLOR,
+							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 							description: `Une nouvelle backup pour le serveur **\`${server}\`** a été créée\n> **\`${backupName}\`**`,
 						},
 					],

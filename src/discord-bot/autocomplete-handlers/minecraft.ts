@@ -1,4 +1,4 @@
-import Util from "../Util";
+import DiscordUtil from "../DiscordUtil";
 
 import Fs from "node:fs";
 import Path from "node:path";
@@ -16,8 +16,10 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
-				const servers = Fs.readdirSync(minecraftServersPath);
+				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
+				const servers = Fs.readdirSync(minecraftServersPath).filter(
+					(server) => !DiscordUtil.minecraftServers.has(server),
+				);
 
 				return servers.map((server) => ({
 					name: server,
@@ -33,7 +35,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
+				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
 				const server = interaction.options.getString("server", false);
 
 				if (!server || !Fs.existsSync(Path.join(minecraftServersPath, server))) return;
@@ -54,7 +56,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const servers = Util.minecraftServers;
+				const servers = DiscordUtil.minecraftServers;
 
 				return servers.map((_, server) => ({
 					name: server,
@@ -70,7 +72,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
+				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
 				const servers = Fs.readdirSync(minecraftServersPath);
 
 				return servers.map((server) => ({
