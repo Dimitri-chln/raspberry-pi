@@ -30,7 +30,6 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const options: ChildProcess.ExecOptions = {
 		cwd: `${Os.homedir()}/${processConfig.workingDirectory}`,
-		env: process.env,
 	};
 
 	const childProcess = ChildProcess.exec(

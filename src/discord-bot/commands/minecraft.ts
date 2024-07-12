@@ -68,7 +68,7 @@ const command: DiscordBot.Command = {
 	],
 
 	async run(interaction) {
-		const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+		const servers = Fs.readdirSync(Util.config.MINECRAFT_SERVERS_PATH);
 		const loadingEmoji = interaction.client.emojis.cache.get(Util.config.LOADING_EMOJI_ID);
 
 		const subcommand = interaction.options.getSubcommand(true);
@@ -122,14 +122,14 @@ const command: DiscordBot.Command = {
 				}
 
 				const serverProperties = new ServerProperties(
-					Fs.readFileSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "server.properties")).toString(),
+					Fs.readFileSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "server.properties")).toString(),
 				);
 
 				if (backup) {
-					if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
-						Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+					if (!Fs.existsSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups")))
+						Fs.mkdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
 
-					const backups = Fs.readdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+					const backups = Fs.readdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
 
 					if (!backups.includes(backup)) {
 						interaction.reply({
@@ -145,12 +145,12 @@ const command: DiscordBot.Command = {
 				}
 
 				Fs.writeFileSync(
-					Path.join(`${Os.homedir()}/${process.env.MINECRAFT_SERVERS_PATH}`, server, "server.properties"),
+					Path.join(`${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`, server, "server.properties"),
 					serverProperties.stringify(),
 				);
 
 				const childProcess = ChildProcess.exec(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
-					cwd: Path.join(process.env.MINECRAFT_SERVERS_PATH, server),
+					cwd: Path.join(Util.config.MINECRAFT_SERVERS_PATH, server),
 				});
 
 				childProcess.on("spawn", () => {
@@ -277,8 +277,8 @@ const command: DiscordBot.Command = {
 					],
 				});
 
-				if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups")))
-					Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+				if (!Fs.existsSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups")))
+					Fs.mkdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
 
 				const now = new Date();
 				const yearString = now.getFullYear().toString().padStart(4, "0");
@@ -287,8 +287,8 @@ const command: DiscordBot.Command = {
 				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
 				Fs.cpSync(
-					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "world"),
-					Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups", backupName),
+					Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "world"),
+					Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups", backupName),
 					{
 						recursive: true,
 					},

@@ -15,7 +15,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+				const servers = Fs.readdirSync(Util.config.MINECRAFT_SERVERS_PATH);
 
 				return servers.map((server) => ({
 					name: server,
@@ -33,9 +33,9 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			run: async (interaction, value) => {
 				const server = interaction.options.getString("server", false);
 
-				if (!server || !Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server))) return;
+				if (!server || !Fs.existsSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server))) return;
 
-				const backups = Fs.readdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "backups"));
+				const backups = Fs.readdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
 
 				return backups.map((backup) => ({
 					name: backup,
@@ -67,7 +67,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const servers = Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH);
+				const servers = Fs.readdirSync(Util.config.MINECRAFT_SERVERS_PATH);
 
 				return servers.map((server) => ({
 					name: server,
