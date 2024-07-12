@@ -46,7 +46,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 		{
 			subCommandGroup: null,
 			subCommand: "stop",
-			name: "server",
+			name: "process",
 			type: ApplicationCommandOptionType.String,
 			filterType: "CONTAINS",
 
@@ -63,8 +63,8 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 		},
 		{
 			subCommandGroup: null,
-			subCommand: "backup",
-			name: "server",
+			subCommand: "restart",
+			name: "process",
 			type: ApplicationCommandOptionType.String,
 			filterType: "CONTAINS",
 

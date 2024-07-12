@@ -1,3 +1,4 @@
+import Path from "node:path";
 import Os from "node:os";
 import ChildProcess from "node:child_process";
 
@@ -6,11 +7,11 @@ import Util from "../Util";
 export default async function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const options: ChildProcess.ExecOptions = {
-			cwd: `${Os.homedir()}/${processConfig.workingDirectory}`,
+			cwd: Path.join(Os.homedir(), processConfig.workingDirectory),
 		};
 
 		const childProcess = ChildProcess.exec(
-			`${Os.homedir()}/${processConfig.workingDirectory}/start.sh`,
+			Path.join(Os.homedir(), processConfig.workingDirectory, "start.sh"),
 			options,
 			(err, stdout, stderr) => {
 				if (err) {

@@ -68,7 +68,7 @@ const command: DiscordBot.Command = {
 	],
 
 	async run(interaction) {
-		const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
+		const minecraftServersPath = Path.join(Os.homedir(), DiscordUtil.config.MINECRAFT_SERVERS_PATH);
 		const servers = Fs.readdirSync(minecraftServersPath);
 		const loadingEmoji = interaction.client.emojis.cache.get(DiscordUtil.config.LOADING_EMOJI_ID);
 

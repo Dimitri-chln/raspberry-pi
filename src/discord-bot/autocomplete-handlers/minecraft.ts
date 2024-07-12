@@ -16,7 +16,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
+				const minecraftServersPath = Path.join(Os.homedir(), DiscordUtil.config.MINECRAFT_SERVERS_PATH);
 				const servers = Fs.readdirSync(minecraftServersPath).filter(
 					(server) => !DiscordUtil.minecraftServers.has(server),
 				);
@@ -35,7 +35,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
+				const minecraftServersPath = Path.join(Os.homedir(), DiscordUtil.config.MINECRAFT_SERVERS_PATH);
 				const server = interaction.options.getString("server", false);
 
 				if (!server || !Fs.existsSync(Path.join(minecraftServersPath, server))) return;
@@ -72,7 +72,7 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const minecraftServersPath = `${Os.homedir()}/${DiscordUtil.config.MINECRAFT_SERVERS_PATH}`;
+				const minecraftServersPath = Path.join(Os.homedir(), DiscordUtil.config.MINECRAFT_SERVERS_PATH);
 				const servers = Fs.readdirSync(minecraftServersPath);
 
 				return servers.map((server) => ({
