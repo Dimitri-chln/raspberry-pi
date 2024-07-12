@@ -1,5 +1,4 @@
 {
-	"DEFAULT_EMBED_COLOR": 12325186,
-	"MAX_MINECRAFT_ONLINE_SERVERS": 1,
-	"LOADING_EMOJI_ID": "1224438508358467664"
+	"TIMEZONE": "Europe/Paris",
+	"START_COMMAND": "npm start 2>&1 | ts \"[%Y-%m-%d %H:%M:%S]\" > out.log"
 }

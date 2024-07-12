@@ -8,6 +8,6 @@
 		"downlevelIteration": true,
 		"skipLibCheck": true
 	},
-	"include": ["src/**/*", "src/assets/*.json", "src/commands/pokemon/hunt.ts"],
+	"include": ["src/**/*", "src/assets/*.json", "src/discord-bot/commands/pokemon/hunt.ts"],
 	"exclude": ["node_modules/**/*", "src-old/**/*"]
 }

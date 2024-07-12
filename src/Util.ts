@@ -1,13 +1,14 @@
-import { AutocompleteHandler, Command } from "./types";
 import config from "./config.json";
+import processes from "./processes.json";
+
+import { ChildProcess } from "node:child_process";
 import { Collection } from "discord.js";
-import { ChildProcess } from "child_process";
+import { CronJob } from "cron";
 
 export default class Util {
 	static readonly config = config;
+	static readonly processes: RaspberryPi.ProcessConfig[] = processes;
 
-	static readonly commands: Collection<string, Command> = new Collection();
-	static readonly autocompleteHandlers: Collection<string, AutocompleteHandler> = new Collection();
-
-	static readonly minecraftServers: Collection<string, ChildProcess> = new Collection();
+	static readonly runningProcesses: Collection<string, ChildProcess> = new Collection();
+	static readonly runningJobs: Collection<string, CronJob> = new Collection();
 }

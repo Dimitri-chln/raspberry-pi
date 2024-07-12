@@ -1,11 +1,10 @@
-import { AutocompleteHandler } from "../types";
 import Util from "../Util";
 
 import Fs from "fs";
 import Path from "path";
 import { ApplicationCommandOptionType } from "discord.js";
 
-const autocompleteHandler: AutocompleteHandler = {
+const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 	name: "minecraft",
 	options: [
 		{

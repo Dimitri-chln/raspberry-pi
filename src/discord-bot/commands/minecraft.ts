@@ -1,13 +1,12 @@
-import { Command } from "../types";
 import Util from "../Util";
 
-import Fs from "fs";
-import Path from "path";
-import { exec } from "child_process";
+import Fs from "node:fs";
+import Path from "node:path";
+import ChildProcess from "node:child_process";
 import { ApplicationCommandOptionType } from "discord.js";
 import ServerProperties from "../util/ServerProperties";
 
-const command: Command = {
+const command: DiscordBot.Command = {
 	name: "minecraft",
 	description: "Gérer les serveurs Minecraft de la Raspberry",
 	options: [
@@ -149,7 +148,7 @@ const command: Command = {
 					serverProperties.stringify(),
 				);
 
-				const childProcess = exec(Path.join(process.env.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
+				const childProcess = ChildProcess.exec(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
 					cwd: Path.join(process.env.MINECRAFT_SERVERS_PATH, server),
 				});
 
@@ -172,8 +171,6 @@ const command: Command = {
 				});
 
 				childProcess.stdout.on("data", (data) => {
-					console.log(`[minecraft:${server}] ${data}`.trim());
-
 					if (/Done \(\d+.\d+s\)!/.test(data)) {
 						interaction.editReply({
 							embeds: [
@@ -189,8 +186,6 @@ const command: Command = {
 						});
 					}
 				});
-
-				childProcess.stderr.on("data", (data) => console.error(`[minecraft:${server}] ${data}`.trim()));
 
 				childProcess.on("exit", (code, signal) => {
 					if (!Number.isInteger(code)) return;
