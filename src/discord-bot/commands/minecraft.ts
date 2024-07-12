@@ -68,7 +68,8 @@ const command: DiscordBot.Command = {
 	],
 
 	async run(interaction) {
-		const servers = Fs.readdirSync(Util.config.MINECRAFT_SERVERS_PATH);
+		const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
+		const servers = Fs.readdirSync(minecraftServersPath);
 		const loadingEmoji = interaction.client.emojis.cache.get(Util.config.LOADING_EMOJI_ID);
 
 		const subcommand = interaction.options.getSubcommand(true);
@@ -122,14 +123,14 @@ const command: DiscordBot.Command = {
 				}
 
 				const serverProperties = new ServerProperties(
-					Fs.readFileSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "server.properties")).toString(),
+					Fs.readFileSync(Path.join(minecraftServersPath, server, "server.properties")).toString(),
 				);
 
 				if (backup) {
-					if (!Fs.existsSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups")))
-						Fs.mkdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
+					if (!Fs.existsSync(Path.join(minecraftServersPath, server, "backups")))
+						Fs.mkdirSync(Path.join(minecraftServersPath, server, "backups"));
 
-					const backups = Fs.readdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
+					const backups = Fs.readdirSync(Path.join(minecraftServersPath, server, "backups"));
 
 					if (!backups.includes(backup)) {
 						interaction.reply({
@@ -144,13 +145,10 @@ const command: DiscordBot.Command = {
 					serverProperties.data["level-name"] = "world";
 				}
 
-				Fs.writeFileSync(
-					Path.join(`${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`, server, "server.properties"),
-					serverProperties.stringify(),
-				);
+				Fs.writeFileSync(Path.join(minecraftServersPath, server, "server.properties"), serverProperties.stringify());
 
-				const childProcess = ChildProcess.exec(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "start.sh"), {
-					cwd: Path.join(Util.config.MINECRAFT_SERVERS_PATH, server),
+				const childProcess = ChildProcess.exec(Path.join(minecraftServersPath, server, "start.sh"), {
+					cwd: Path.join(minecraftServersPath, server),
 				});
 
 				childProcess.on("spawn", () => {
@@ -277,8 +275,8 @@ const command: DiscordBot.Command = {
 					],
 				});
 
-				if (!Fs.existsSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups")))
-					Fs.mkdirSync(Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups"));
+				if (!Fs.existsSync(Path.join(minecraftServersPath, server, "backups")))
+					Fs.mkdirSync(Path.join(minecraftServersPath, server, "backups"));
 
 				const now = new Date();
 				const yearString = now.getFullYear().toString().padStart(4, "0");
@@ -287,8 +285,8 @@ const command: DiscordBot.Command = {
 				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
 				Fs.cpSync(
-					Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "world"),
-					Path.join(Util.config.MINECRAFT_SERVERS_PATH, server, "backups", backupName),
+					Path.join(minecraftServersPath, server, "world"),
+					Path.join(minecraftServersPath, server, "backups", backupName),
 					{
 						recursive: true,
 					},
