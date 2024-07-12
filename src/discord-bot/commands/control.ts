@@ -115,6 +115,7 @@ const command: DiscordBot.Command = {
 				}
 
 				try {
+					console.log(Path.join(Os.homedir(), processConfig.workingDirectory, "out.log"));
 					const stdout = Fs.readFileSync(Path.join(Os.homedir(), processConfig.workingDirectory, "out.log"), {
 						encoding: "utf8",
 					});
