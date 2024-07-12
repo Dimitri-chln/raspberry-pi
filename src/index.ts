@@ -6,6 +6,8 @@ import { CronJob } from "cron";
 import Util from "./Util";
 import discordBot from "./discord-bot";
 
+console.log(process.env);
+
 Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 	console.log(`Configuring process ${processConfig.name}...`);
 
