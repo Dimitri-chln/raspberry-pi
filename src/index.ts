@@ -1,5 +1,5 @@
 import ChildProcess from "node:child_process";
-import Cron from "cron";
+import { CronJob } from "cron";
 
 import Util from "./Util";
 import discordBot from "./discord-bot";
@@ -9,7 +9,7 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 	if (!processConfig.cronTime) return spawnChildProcess(processConfig);
 
 	// Process with Cron time
-	const job = new Cron.CronJob(
+	const job = new CronJob(
 		processConfig.cronTime,
 		() => {
 			spawnChildProcess(processConfig);
