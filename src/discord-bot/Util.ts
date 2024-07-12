@@ -1,5 +1,5 @@
 import config from "./config.json";
-import { ChildProcess } from "child_process";
+import { ChildProcess } from "node:child_process";
 import { Collection } from "discord.js";
 
 export default class Util {
