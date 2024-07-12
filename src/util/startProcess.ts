@@ -6,7 +6,7 @@ export default async function startProcess(processConfig: RaspberryPi.ProcessCon
 	// Process that start immediately
 	if (!processConfig.cronTime) {
 		console.log(`Starting process ${processConfig.name}...`);
-		await spawnChildProcess(processConfig);
+		return await spawnChildProcess(processConfig);
 	}
 
 	// Process with Cron time
