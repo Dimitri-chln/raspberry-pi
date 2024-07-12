@@ -29,7 +29,7 @@ function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 		cwd: processConfig.workingDirectory,
 	};
 
-	const childProcess = ChildProcess.exec("./start.sh", options, (err) => {
+	const childProcess = ChildProcess.exec(`${processConfig.workingDirectory}/start.sh`, options, (err) => {
 		console.error(`Couldn't start process ${processConfig.name}: ${err}`);
 	});
 
