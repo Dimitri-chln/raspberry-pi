@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import ChildProcess from "node:child_process";
 import { CronJob } from "cron";
 
