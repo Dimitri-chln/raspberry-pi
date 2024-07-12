@@ -16,7 +16,8 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 			filterType: "CONTAINS",
 
 			run: async (interaction, value) => {
-				const servers = Fs.readdirSync(Util.config.MINECRAFT_SERVERS_PATH);
+				const minecraftServersPath = `${Os.homedir()}/${Util.config.MINECRAFT_SERVERS_PATH}`;
+				const servers = Fs.readdirSync(minecraftServersPath);
 
 				return servers.map((server) => ({
 					name: server,
