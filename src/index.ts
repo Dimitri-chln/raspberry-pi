@@ -26,7 +26,6 @@ Util.processes.forEach((processConfig: RaspberryPi.ProcessConfig) => {
 
 function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): void {
 	const options: ChildProcess.ExecOptions = {
-		shell: "bash",
 		cwd: processConfig.workingDirectory,
 	};
 
