@@ -1,6 +1,6 @@
 import Util from "../Util";
 
-import { exec } from "node:child_process";
+import ChildProcess from "node:child_process";
 import { ApplicationCommandOptionType } from "discord.js";
 
 const command: DiscordBot.Command = {
