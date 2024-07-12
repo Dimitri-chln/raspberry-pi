@@ -23,7 +23,7 @@ export default async function spawnChildProcess(processConfig: RaspberryPi.Proce
 
 		childProcess.on("spawn", () => {
 			Util.runningProcesses.set(processConfig.name, childProcess);
-			console.log(`Starting process ${processConfig.name}`);
+			console.log(`Process ${processConfig.name} has been started (PID: ${childProcess.pid})`);
 			resolve();
 		});
 
@@ -32,6 +32,10 @@ export default async function spawnChildProcess(processConfig: RaspberryPi.Proce
 
 			Util.runningProcesses.delete(processConfig.name);
 			console.log(`Process ${processConfig.name} stopped with exit code ${code}`);
+		});
+
+		childProcess.on("error", (err) => {
+			console.error(`Process ${processConfig.name} encountered an error: ${err}`);
 		});
 	});
 }
