@@ -127,7 +127,7 @@ const command: DiscordBot.Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-								description: `\`\`\`${stdout}\`\`\``,
+								description: `\`\`\`${stdout.slice(-2500)}\`\`\``,
 							},
 						],
 					});
