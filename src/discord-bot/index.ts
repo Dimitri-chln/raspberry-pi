@@ -34,6 +34,8 @@ const client = new Client({
 	},
 });
 
+client.on("error", console.error);
+
 client.on("ready", async () => {
 	console.log(`Logged in to Discord as ${client.user.tag} (${client.user.id})`);
 
@@ -84,7 +86,7 @@ client.on("interactionCreate", async (interaction) => {
 				const command = Util.commands.get(interaction.commandName);
 				if (!command) return;
 
-				command.run(interaction);
+				command.run(interaction).catch(console.error);
 			}
 
 			break;
@@ -129,7 +131,7 @@ client.on("interactionCreate", async (interaction) => {
 				})
 				.slice(0, 25);
 
-			interaction.respond(finalResults);
+			interaction.respond(finalResults).catch(console.error);
 
 			break;
 		}

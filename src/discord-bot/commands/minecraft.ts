@@ -147,9 +147,17 @@ const command: DiscordBot.Command = {
 
 				Fs.writeFileSync(Path.join(minecraftServersPath, server, "server.properties"), serverProperties.stringify());
 
-				const childProcess = ChildProcess.exec(Path.join(minecraftServersPath, server, "start.sh"), {
-					cwd: Path.join(minecraftServersPath, server),
-				});
+				const childProcess = ChildProcess.exec(
+					Path.join(minecraftServersPath, server, "start.sh"),
+					{
+						cwd: Path.join(minecraftServersPath, server),
+					},
+					(err, stdout, stderr) => {
+						if (err) console.error(err);
+					},
+				);
+
+				childProcess.on("error", console.error);
 
 				childProcess.on("spawn", () => {
 					DiscordUtil.minecraftServers.set(server, childProcess);
