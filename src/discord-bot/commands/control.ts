@@ -88,10 +88,7 @@ const command: DiscordBot.Command = {
 								value: processConfig.cronTime
 									? `__**Prochaine exécution :**__ ${
 											Util.runningJobs.has(processConfig.name)
-												? Util.runningJobs
-														.get(processConfig.name)
-														.nextDate()
-														.toLocaleString({ dateStyle: "short", timeStyle: "short" })
+												? `<t:${Math.round(Util.runningJobs.get(processConfig.name).nextDate().valueOf() / 1000)}:R>`
 												: "désactivée"
 									  }`
 									: `__**En cours d'exécution :**__ ${Util.runningProcesses.has(processConfig.name) ? "oui" : "non"}`,
