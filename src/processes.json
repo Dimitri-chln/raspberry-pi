@@ -8,6 +8,10 @@
 		"workingDirectory": "mayze/mayze-web"
 	},
 	{
+		"name": "mayze-web-static",
+		"workingDirectory": "mayze/mayze-web-static"
+	},
+	{
 		"name": "mayze-web-semantix",
 		"workingDirectory": "mayze/mayze-web-semantix"
 	},
