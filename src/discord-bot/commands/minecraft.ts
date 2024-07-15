@@ -53,6 +53,20 @@ const command: DiscordBot.Command = {
 		},
 		{
 			type: ApplicationCommandOptionType.Subcommand,
+			name: "reload",
+			description: "Recharger un serveur Minecraft de la Raspberry",
+			options: [
+				{
+					type: ApplicationCommandOptionType.String,
+					name: "server",
+					description: "Le nom du serveur à recharger",
+					required: true,
+					autocomplete: true,
+				},
+			],
+		},
+		{
+			type: ApplicationCommandOptionType.Subcommand,
 			name: "backup",
 			description: "Créer une backup d'un serveur Minecraft de la Raspberry",
 			options: [
@@ -252,6 +266,47 @@ const command: DiscordBot.Command = {
 								description: error
 									? `Le serveur **\`${server}\`** n'a pas pu être arrêté`
 									: `Le serveur **\`${server}\`** est en cours de sauvegarde ${loadingEmoji}`,
+							},
+						],
+					});
+				});
+				break;
+			}
+
+			case "reload": {
+				const server = interaction.options.getString("server", true);
+
+				if (!servers.includes(server)) {
+					interaction.reply({
+						content: "Ce serveur n'existe pas",
+						ephemeral: true,
+					});
+					return;
+				}
+
+				const childProcess = DiscordUtil.minecraftServers.get(server);
+				if (!childProcess) {
+					interaction.reply({
+						content: "Ce serveur n'est pas lancé",
+						ephemeral: true,
+					});
+					return;
+				}
+
+				childProcess.stdin.write("/reload\n", (error) => {
+					if (error) console.error(error);
+
+					interaction.reply({
+						embeds: [
+							{
+								author: {
+									name: "Serveurs Minecraft",
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+								description: error
+									? `Le serveur **\`${server}\`** n'a pas pu être rechargé`
+									: `Le serveur **\`${server}\`** a été rechargé avec succès`,
 							},
 						],
 					});
