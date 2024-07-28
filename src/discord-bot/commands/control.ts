@@ -167,6 +167,19 @@ const command: DiscordBot.Command = {
 					}
 				}
 
+				await interaction.reply({
+					embeds: [
+						{
+							author: {
+								name: `Processus ${processConfig.name}`,
+								icon_url: interaction.client.user.displayAvatarURL(),
+							},
+							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+							description: `Le processus **\`${processConfig.name}\`** est en cours de lancement...`,
+						},
+					],
+				});
+
 				try {
 					await startProcess(processConfig);
 
@@ -183,9 +196,17 @@ const command: DiscordBot.Command = {
 						],
 					});
 				} catch (err) {
-					interaction.reply({
-						content: `Impossible de lancer le processus ${processConfig.name}`,
-						ephemeral: true,
+					await interaction.reply({
+						embeds: [
+							{
+								author: {
+									name: `Processus ${processConfig.name}`,
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+								description: `Le processus **\`${processConfig.name}\`** n'a pas pu être lancé`,
+							},
+						],
 					});
 				}
 
@@ -297,11 +318,53 @@ const command: DiscordBot.Command = {
 					}
 				}
 
-				try {
-					stopProcess(processConfig);
-					await startProcess(processConfig);
+				await interaction.reply({
+					embeds: [
+						{
+							author: {
+								name: `Processus ${processConfig.name}`,
+								icon_url: interaction.client.user.displayAvatarURL(),
+							},
+							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+							description: `Le processus **\`${processConfig.name}\`** est en cours de relancement...`,
+						},
+					],
+				});
 
-					interaction.reply({
+				try {
+					await stopProcess(processConfig);
+
+					try {
+						await startProcess(processConfig);
+
+						interaction.reply({
+							embeds: [
+								{
+									author: {
+										name: `Processus ${processConfig.name}`,
+										icon_url: interaction.client.user.displayAvatarURL(),
+									},
+									color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+									description: `Le processus **\`${processConfig.name}\`** a été relancé avec succès`,
+								},
+							],
+						});
+					} catch (err) {
+						interaction.editReply({
+							embeds: [
+								{
+									author: {
+										name: `Processus ${processConfig.name}`,
+										icon_url: interaction.client.user.displayAvatarURL(),
+									},
+									color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+									description: `Le processus **\`${processConfig.name}\`** n'a pas pu être relancé`,
+								},
+							],
+						});
+					}
+				} catch (err) {
+					interaction.editReply({
 						embeds: [
 							{
 								author: {
@@ -309,14 +372,9 @@ const command: DiscordBot.Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-								description: `Le processus **\`${processConfig.name}\`** a été relancé avec succès`,
+								description: `Le processus **\`${processConfig.name}\`** n'a pas pu être arrêté`,
 							},
 						],
-					});
-				} catch (err) {
-					interaction.reply({
-						content: `Impossible de relancer le processus ${processConfig.name}`,
-						ephemeral: true,
 					});
 				}
 				break;
