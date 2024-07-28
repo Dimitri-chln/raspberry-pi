@@ -11,14 +11,8 @@ export default async function stopProcess(processConfig: RaspberryPi.ProcessConf
 		} else {
 			const childProcess = Util.runningProcesses.get(processConfig.name);
 
-			childProcess.on("exit", (code, signal) => {
-				if (!Number.isInteger(code)) return;
-				resolve();
-			});
-
-			childProcess.on("error", (err) => {
-				reject();
-			});
+			childProcess.on("exit", resolve);
+			childProcess.on("error", reject);
 
 			process.kill(-childProcess.pid, "SIGTERM");
 		}

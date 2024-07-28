@@ -23,8 +23,6 @@ export default async function spawnChildProcess(processConfig: RaspberryPi.Proce
 		});
 
 		childProcess.on("exit", (code, signal) => {
-			if (!Number.isInteger(code)) return;
-
 			Util.runningProcesses.delete(processConfig.name);
 			console.log(`Process ${processConfig.name} stopped with exit code ${code}`);
 		});
