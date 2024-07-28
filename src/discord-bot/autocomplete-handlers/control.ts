@@ -1,8 +1,5 @@
 import Util from "../../Util";
 
-import Fs from "node:fs";
-import Path from "node:path";
-import Os from "node:os";
 import { ApplicationCommandOptionType } from "discord.js";
 
 const autocompleteHandler: DiscordBot.AutocompleteHandler = {

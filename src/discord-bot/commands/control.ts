@@ -222,9 +222,7 @@ const command: DiscordBot.Command = {
 					}
 				}
 
-				stopProcess(processConfig);
-
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
@@ -232,10 +230,40 @@ const command: DiscordBot.Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-							description: `Le processus **\`${processConfig.name}\`** a été arrêté avec succès`,
+							description: `Le processus **\`${processConfig.name}\`** est en cours d'arrêt...`,
 						},
 					],
 				});
+
+				try {
+					await stopProcess(processConfig);
+
+					interaction.editReply({
+						embeds: [
+							{
+								author: {
+									name: `Processus ${processConfig.name}`,
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+								description: `Le processus **\`${processConfig.name}\`** a été arrêté avec succès`,
+							},
+						],
+					});
+				} catch (err) {
+					interaction.editReply({
+						embeds: [
+							{
+								author: {
+									name: `Processus ${processConfig.name}`,
+									icon_url: interaction.client.user.displayAvatarURL(),
+								},
+								color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
+								description: `Le processus **\`${processConfig.name}\`** n'a pas pu être arrêté`,
+							},
+						],
+					});
+				}
 				break;
 			}
 

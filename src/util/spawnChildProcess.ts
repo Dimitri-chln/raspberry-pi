@@ -6,19 +6,14 @@ import Util from "../Util";
 
 export default async function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): Promise<void> {
 	return new Promise((resolve, reject) => {
-		const options: ChildProcess.ExecOptions = {
+		const options: ChildProcess.SpawnOptionsWithoutStdio = {
 			cwd: Path.join(Os.homedir(), processConfig.workingDirectory),
+			detached: true,
 		};
 
-		const childProcess = ChildProcess.exec(
+		const childProcess = ChildProcess.spawn(
 			Path.join(Os.homedir(), processConfig.workingDirectory, "start.sh"),
 			options,
-			(err, stdout, stderr) => {
-				if (err) {
-					console.error(`Couldn't start process ${processConfig.name}: ${err}`);
-					reject(err);
-				}
-			},
 		);
 
 		childProcess.on("spawn", () => {

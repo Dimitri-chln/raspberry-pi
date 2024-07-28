@@ -1,13 +1,26 @@
 import Util from "../Util";
 
-export default function stopProcess(processConfig: RaspberryPi.ProcessConfig): void {
-	if (processConfig.cronTime) {
-		const job = Util.runningJobs.get(processConfig.name);
-		job.stop();
+export default async function stopProcess(processConfig: RaspberryPi.ProcessConfig): Promise<void> {
+	return new Promise((resolve, reject) => {
+		if (processConfig.cronTime) {
+			const job = Util.runningJobs.get(processConfig.name);
+			job.stop();
 
-		Util.runningJobs.delete(processConfig.name);
-	} else {
-		const childProcess = Util.runningProcesses.get(processConfig.name);
-		childProcess.kill();
-	}
+			Util.runningJobs.delete(processConfig.name);
+			resolve();
+		} else {
+			const childProcess = Util.runningProcesses.get(processConfig.name);
+
+			childProcess.on("exit", (code, signal) => {
+				if (!Number.isInteger(code)) return;
+				resolve();
+			});
+
+			childProcess.on("error", (err) => {
+				reject();
+			});
+
+			process.kill(-childProcess.pid, "SIGTERM");
+		}
+	});
 }
