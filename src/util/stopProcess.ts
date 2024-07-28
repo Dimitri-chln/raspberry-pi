@@ -14,6 +14,7 @@ export default async function stopProcess(processConfig: RaspberryPi.ProcessConf
 			childProcess.on("exit", resolve);
 			childProcess.on("error", reject);
 
+			// The - signs converts a pid to a group of pids
 			process.kill(-childProcess.pid, "SIGTERM");
 		}
 	});
