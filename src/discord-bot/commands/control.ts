@@ -82,11 +82,12 @@ const command: DiscordBot.Command = {
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
 			case "list": {
-				const pids = Util.runningProcesses.map((runningProcess) => runningProcess.pid);
-				const output = ChildProcess.execSync(`ps -h -o pid,rss,%mem -p ${pids.join(",")}`, { encoding: "utf8" });
 				const memoryUsage: MemoryUsage = Object.fromEntries(
-					output.split("\n").map((line) => {
-						const [pid, rss, mem] = line.trim().split(/\s+/g);
+					Util.runningProcesses.map((runningProcess) => {
+						const output = ChildProcess.execSync(`ps -o pid,rss,%mem,comm -g ${runningProcess.pid} | grep node`, {
+							encoding: "utf8",
+						});
+						const [pid, rss, mem] = output.split(/\s+/g);
 						return [parseInt(pid), { rss: parseInt(rss), mem: parseFloat(mem) }];
 					}),
 				);
@@ -111,9 +112,9 @@ const command: DiscordBot.Command = {
 										  }`
 										: `__**En cours d'exécution :**__ ${runningProcess ? "✅" : "❌"}\n__**Mémoire utilisée :**__ ${
 												runningProcess
-													? `${memoryUsage[runningProcess.pid].rss.toLocaleString("fr")} Kb (${
-															memoryUsage[runningProcess.pid].mem
-													  }%)`
+													? `${memoryUsage[runningProcess.pid].rss.toLocaleString("fr")} Kb (${memoryUsage[
+															runningProcess.pid
+													  ].mem.toFixed(1)}%)`
 													: "0 Kb (0%)"
 										  }`,
 								};
