@@ -208,7 +208,7 @@ const command: DiscordBot.Command = {
 				try {
 					await startProcess(processConfig);
 
-					interaction.reply({
+					interaction.editReply({
 						embeds: [
 							{
 								author: {
@@ -221,7 +221,7 @@ const command: DiscordBot.Command = {
 						],
 					});
 				} catch (err) {
-					await interaction.reply({
+					await interaction.editReply({
 						embeds: [
 							{
 								author: {
@@ -362,7 +362,7 @@ const command: DiscordBot.Command = {
 					try {
 						await startProcess(processConfig);
 
-						interaction.reply({
+						interaction.editReply({
 							embeds: [
 								{
 									author: {
