@@ -4,6 +4,7 @@ import DiscordUtil from "../DiscordUtil";
 import Fs from "node:fs";
 import Path from "node:path";
 import Os from "node:os";
+import ChildProcess from "node:child_process";
 import { ApplicationCommandOptionType } from "discord.js";
 import startProcess from "../../util/startProcess";
 import stopProcess from "../../util/stopProcess";
@@ -76,9 +77,20 @@ const command: DiscordBot.Command = {
 	],
 
 	async run(interaction) {
+		const loadingEmoji = interaction.client.emojis.cache.get(DiscordUtil.config.LOADING_EMOJI_ID);
+
 		const subcommand = interaction.options.getSubcommand(true);
 		switch (subcommand) {
 			case "list": {
+				const pids = Util.runningProcesses.map((runningProcess) => runningProcess.pid);
+				const output = ChildProcess.execSync(`ps -h -o pid,rss,%mem -p ${pids.join(",")}`, { encoding: "utf8" });
+				const memoryUsage: MemoryUsage = Object.fromEntries(
+					output.split("\n").map((line) => {
+						const [pid, rss, mem] = line.trim().split(/\s+/g);
+						return [parseInt(pid), { rss: parseInt(rss), mem: parseFloat(mem) }];
+					}),
+				);
+
 				interaction.reply({
 					embeds: [
 						{
@@ -87,16 +99,25 @@ const command: DiscordBot.Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-							fields: Util.processes.map((processConfig) => ({
-								name: processConfig.name,
-								value: processConfig.cronTime
-									? `__**Prochaine exécution :**__ ${
-											Util.runningJobs.has(processConfig.name)
-												? `<t:${Math.round(Util.runningJobs.get(processConfig.name).nextDate().valueOf() / 1000)}:R>`
-												: "désactivée"
-									  }`
-									: `__**En cours d'exécution :**__ ${Util.runningProcesses.has(processConfig.name) ? "oui" : "non"}`,
-							})),
+							fields: Util.processes.map((processConfig) => {
+								const runningJob = Util.runningJobs.get(processConfig.name);
+								const runningProcess = Util.runningProcesses.get(processConfig.name);
+
+								return {
+									name: processConfig.name,
+									value: processConfig.cronTime
+										? `__**Prochaine exécution :**__ ${
+												runningJob ? `<t:${Math.round(runningJob.nextDate().valueOf() / 1000)}:R>` : "désactivée"
+										  }`
+										: `__**En cours d'exécution :**__ ${runningProcess ? "✅" : "❌"}\n__**Mémoire utilisée :**__ ${
+												runningProcess
+													? `${memoryUsage[runningProcess.pid].rss.toLocaleString("fr")} Kb (${
+															memoryUsage[runningProcess.pid].mem
+													  }%)`
+													: "0 Kb (0%)"
+										  }`,
+								};
+							}),
 						},
 					],
 				});
@@ -179,7 +200,7 @@ const command: DiscordBot.Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-							description: `Le processus **\`${processConfig.name}\`** est en cours de lancement...`,
+							description: `Le processus **\`${processConfig.name}\`** est en cours de lancement ${loadingEmoji}`,
 						},
 					],
 				});
@@ -255,7 +276,7 @@ const command: DiscordBot.Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-							description: `Le processus **\`${processConfig.name}\`** est en cours d'arrêt...`,
+							description: `Le processus **\`${processConfig.name}\`** est en cours d'arrêt ${loadingEmoji}`,
 						},
 					],
 				});
@@ -330,7 +351,7 @@ const command: DiscordBot.Command = {
 								icon_url: interaction.client.user.displayAvatarURL(),
 							},
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
-							description: `Le processus **\`${processConfig.name}\`** est en cours de relancement...`,
+							description: `Le processus **\`${processConfig.name}\`** est en cours de relancement ${loadingEmoji}`,
 						},
 					],
 				});
@@ -386,5 +407,12 @@ const command: DiscordBot.Command = {
 		}
 	},
 };
+
+interface MemoryUsage {
+	[pid: number]: {
+		rss: number;
+		mem: number;
+	};
+}
 
 export default command;
