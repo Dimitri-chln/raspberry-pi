@@ -81,6 +81,22 @@ const autocompleteHandler: DiscordBot.AutocompleteHandler = {
 				}));
 			},
 		},
+		{
+			subCommandGroup: null,
+			subCommand: "reload",
+			name: "server",
+			type: ApplicationCommandOptionType.String,
+			filterType: "CONTAINS",
+
+			run: async (interaction, value) => {
+				const servers = DiscordUtil.minecraftServers;
+
+				return servers.map((_, server) => ({
+					name: server,
+					value: server,
+				}));
+			},
+		},
 	],
 };
 
