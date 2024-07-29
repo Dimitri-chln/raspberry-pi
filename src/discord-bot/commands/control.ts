@@ -87,7 +87,7 @@ const command: DiscordBot.Command = {
 						const output = ChildProcess.execSync(`ps -o pid,rss,%mem,comm -g ${runningProcess.pid} | grep node`, {
 							encoding: "utf8",
 						});
-						const [pid, rss, mem] = output.split(/\s+/g);
+						const [pid, rss, mem] = output.trim().split(/\s+/g);
 						return [parseInt(pid), { rss: parseInt(rss), mem: parseFloat(mem) }];
 					}),
 				);
