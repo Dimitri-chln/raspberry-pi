@@ -92,6 +92,8 @@ const command: DiscordBot.Command = {
 					}),
 				);
 
+				console.log(memoryUsage);
+
 				interaction.reply({
 					embeds: [
 						{
