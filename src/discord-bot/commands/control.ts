@@ -107,10 +107,10 @@ const command: DiscordBot.Command = {
 								return {
 									name: processConfig.name,
 									value: processConfig.cronTime
-										? `__**Prochaine exécution :**__ ${
+										? `>>> __**Prochaine exécution :**__ ${
 												runningJob ? `<t:${Math.round(runningJob.nextDate().valueOf() / 1000)}:R>` : "désactivée"
 										  }`
-										: `__**En cours d'exécution :**__ ${runningProcess ? "✅" : "❌"}\n__**Mémoire utilisée :**__ ${
+										: `>>> __**En cours d'exécution :**__ ${runningProcess ? "✅" : "❌"}\n__**Mémoire utilisée :**__ ${
 												runningProcess
 													? `${memoryUsage[runningProcess.pid].rss.toLocaleString("fr")} Kb (${memoryUsage[
 															runningProcess.pid

@@ -99,8 +99,7 @@ const command: DiscordBot.Command = {
 							color: DiscordUtil.config.DEFAULT_EMBED_COLOR,
 							fields: servers.map((server) => ({
 								name: server,
-								value: `__**En ligne :**__ ${DiscordUtil.minecraftServers.has(server) ? "oui" : "non"}`,
-								inline: true,
+								value: `>>> __**En ligne :**__ ${DiscordUtil.minecraftServers.has(server) ? "✅" : "❌"}`,
 							})),
 						},
 					],
