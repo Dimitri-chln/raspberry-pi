@@ -342,7 +342,7 @@ const command: DiscordBot.Command = {
 
 				const now = new Date();
 				const yearString = now.getFullYear().toString().padStart(4, "0");
-				const monthString = now.getMonth().toString().padStart(2, "0");
+				const monthString = (now.getMonth() + 1).toString().padStart(2, "0");
 				const dayString = now.getDate().toString().padStart(2, "0");
 				const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
