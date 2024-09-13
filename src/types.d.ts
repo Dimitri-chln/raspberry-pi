@@ -7,6 +7,8 @@ namespace RaspberryPi {
 	interface ProcessConfig {
 		name: string;
 		workingDirectory: string;
+		autoStart: boolean;
+		restartOnFailure: boolean;
 		cronTime?: string;
 	}
 }

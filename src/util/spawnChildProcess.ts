@@ -3,6 +3,7 @@ import Os from "node:os";
 import ChildProcess from "node:child_process";
 
 import Util from "../Util";
+import startProcess from "./startProcess";
 
 export default async function spawnChildProcess(processConfig: RaspberryPi.ProcessConfig): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -25,6 +26,8 @@ export default async function spawnChildProcess(processConfig: RaspberryPi.Proce
 		childProcess.on("exit", (code, signal) => {
 			Util.runningProcesses.delete(processConfig.name);
 			console.log(`Process ${processConfig.name} stopped with exit code ${code}`);
+
+			if (code && code != 0 && processConfig.restartOnFailure) startProcess(processConfig);
 		});
 
 		childProcess.on("error", (err) => {

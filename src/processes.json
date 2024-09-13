@@ -1,27 +1,39 @@
 [
 	{
 		"name": "mayze-bot",
-		"workingDirectory": "mayze/mayze-bot"
+		"workingDirectory": "mayze/mayze-bot",
+		"autoStart": true,
+		"restartOnFailure": false
 	},
 	{
 		"name": "mayze-web",
-		"workingDirectory": "mayze/mayze-web"
+		"workingDirectory": "mayze/mayze-web",
+		"autoStart": false,
+		"restartOnFailure": false
 	},
 	{
 		"name": "mayze-web-static",
-		"workingDirectory": "mayze/mayze-web-static"
+		"workingDirectory": "mayze/mayze-web-static",
+		"autoStart": true,
+		"restartOnFailure": false
 	},
 	{
 		"name": "mayze-web-semantix",
-		"workingDirectory": "mayze/mayze-web-semantix"
+		"workingDirectory": "mayze/mayze-web-semantix",
+		"autoStart": false,
+		"restartOnFailure": false
 	},
 	{
 		"name": "spotify-liked-sync",
-		"workingDirectory": "github/spotify-liked-sync"
+		"workingDirectory": "github/spotify-liked-sync",
+		"autoStart": true,
+		"restartOnFailure": false
 	},
 	{
 		"name": "cloudflare-dns",
 		"workingDirectory": "github/cloudflare-dns",
+		"autoStart": true,
+		"restartOnFailure": true,
 		"cronTime": "*/5 * * * *"
 	}
 ]
