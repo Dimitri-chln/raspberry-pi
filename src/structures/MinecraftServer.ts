@@ -1,9 +1,9 @@
 import Util from "../Util";
 import Service from "./Service";
 
+import Fs from "node:fs";
 import FsAsync from "node:fs/promises";
 import Path from "node:path";
-import ChildProcess from "node:child_process";
 
 import ServerProperties from "./MinecraftServerProperties";
 
@@ -11,8 +11,8 @@ export default class MinecraftServer extends Service {
 	constructor(name: string) {
 		super(`minecraft@${name}`);
 
-		// Create backup directory
-		ChildProcess.execFileSync(process.env.CREATE_BACKUP_DIRECTORY_BIN, [name]);
+		if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups")))
+			Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups"));
 	}
 
 	async serverProperties(): Promise<ServerProperties> {
@@ -41,8 +41,13 @@ export default class MinecraftServer extends Service {
 		const dayString = now.getDate().toString().padStart(2, "0");
 		const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
-		// Create backup (copy world in backup directory)
-		ChildProcess.execFileSync(process.env.CREATE_BACKUP_BIN, [this.name, backupName]);
+		await FsAsync.cp(
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "world"),
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "backups", backupName),
+			{
+				recursive: true,
+			},
+		);
 
 		return backupName;
 	}
