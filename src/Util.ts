@@ -13,9 +13,9 @@ export default class Util {
 	static readonly minecraftServersPath = process.env.MINECRAFT_SERVERS_PATH;
 
 	static readonly services: Collection<string, Service> = new Collection(
-		Fs.readdirSync(this.servicesPath)
+		Fs.readdirSync(process.env.SERVICES_PATH)
 			.map((serviceGroupName) =>
-				Fs.readdirSync(Path.join(this.servicesPath, serviceGroupName)).map(
+				Fs.readdirSync(Path.join(process.env.SERVICES_PATH, serviceGroupName)).map(
 					(serviceName) => [serviceName, new Service(serviceName)] as [string, Service],
 				),
 			)
@@ -23,7 +23,7 @@ export default class Util {
 	);
 
 	static readonly minecraftServers: Collection<string, MinecraftServer> = new Collection(
-		Fs.readdirSync(this.minecraftServersPath).map(
+		Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH).map(
 			(serverName) => [serverName, new MinecraftServer(serverName)] as [string, MinecraftServer],
 		),
 	);
