@@ -19,10 +19,16 @@ const event: RaspberryPi.Event = {
 			};
 
 			const applicationCommand = Util.client.application.commands.cache.find((c) => c.name === command.name);
-			if (!applicationCommand) Util.client.application.commands.create(applicationCommandData);
+			if (!applicationCommand) Util.client.application.commands.create(applicationCommandData).catch(console.error);
 			else {
 				if (!applicationCommand.equals(applicationCommandData))
-					Util.client.application.commands.edit(applicationCommand, applicationCommandData);
+					Util.client.application.commands.edit(applicationCommand, applicationCommandData).catch(console.error);
+			}
+		});
+
+		Util.client.application.commands.cache.forEach((applicationCommand) => {
+			if (!Util.commands.has(applicationCommand.name)) {
+				applicationCommand.delete().catch(console.error);
 			}
 		});
 	},
