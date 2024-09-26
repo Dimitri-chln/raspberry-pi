@@ -1,7 +1,6 @@
 {
 	"TIMEZONE": "Europe/Paris",
 	"SERVICES_PATH": "/home/dimitri/services",
-	"SERVICES_CONFIG_PATH": "/home/dimitri/systemd",
 	"MINECRAFT_SERVERS_PATH": "/home/minecraft",
 	"MAX_MINECRAFT_ONLINE_SERVERS": 1,
 	"LOADING_EMOJI_ID": "1224438508358467664",
