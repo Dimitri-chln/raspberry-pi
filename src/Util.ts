@@ -3,16 +3,19 @@ import config from "./config.json";
 import Fs from "node:fs";
 import Path from "node:path";
 import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
-import MinecraftServer from "./structures/MinecraftServer";
+
 import Service from "./structures/Service";
+import MinecraftServer from "./structures/MinecraftServer";
 
 export default class Util {
 	static readonly config = config;
+	static readonly servicesPath = process.env.SERVICES_PATH;
+	static readonly minecraftServersPath = process.env.MINECRAFT_SERVERS_PATH;
 
 	static readonly services: Collection<string, Service> = new Collection(
-		Fs.readdirSync(config.SERVICES_PATH)
+		Fs.readdirSync(this.servicesPath)
 			.map((serviceGroupName) =>
-				Fs.readdirSync(Path.join(config.SERVICES_PATH, serviceGroupName)).map(
+				Fs.readdirSync(Path.join(this.servicesPath, serviceGroupName)).map(
 					(serviceName) => [serviceName, new Service(serviceName)] as [string, Service],
 				),
 			)
@@ -20,7 +23,7 @@ export default class Util {
 	);
 
 	static readonly minecraftServers: Collection<string, MinecraftServer> = new Collection(
-		Fs.readdirSync(config.MINECRAFT_SERVERS_PATH).map(
+		Fs.readdirSync(this.minecraftServersPath).map(
 			(serverName) => [serverName, new MinecraftServer(serverName)] as [string, MinecraftServer],
 		),
 	);
