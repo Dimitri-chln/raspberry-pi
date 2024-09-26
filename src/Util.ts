@@ -9,8 +9,6 @@ import MinecraftServer from "./structures/MinecraftServer";
 
 export default class Util {
 	static readonly config = config;
-	static readonly servicesPath = process.env.SERVICES_PATH;
-	static readonly minecraftServersPath = process.env.MINECRAFT_SERVERS_PATH;
 
 	static readonly services: Collection<string, Service> = new Collection(
 		Fs.readdirSync(process.env.SERVICES_PATH)
