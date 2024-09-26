@@ -8,8 +8,6 @@ import Path from "node:path";
 import ServerProperties from "./MinecraftServerProperties";
 
 export default class MinecraftServer extends Service {
-	readonly name: string;
-
 	constructor(name: string) {
 		super(`minecraft@${name}`);
 
