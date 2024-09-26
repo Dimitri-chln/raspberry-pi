@@ -1,19 +1,4 @@
 namespace RaspberryPi {
-	import("node:child_process");
-	import { ChildProcess } from "node:child_process";
-	import("cron");
-	import { CronJob } from "cron";
-
-	interface ProcessConfig {
-		name: string;
-		workingDirectory: string;
-		autoStart: boolean;
-		restartOnFailure: boolean;
-		cronTime?: string;
-	}
-}
-
-namespace DiscordBot {
 	import("discord.js");
 	import {
 		ApplicationCommandOptionChoice,
@@ -22,6 +7,12 @@ namespace DiscordBot {
 		AutocompleteInteraction,
 		ChatInputCommandInteraction,
 	} from "discord.js";
+
+	interface Event {
+		name: string;
+		once: boolean;
+		run: (...args: any[]) => Promise<void>;
+	}
 
 	interface Command {
 		name: string;
@@ -41,7 +32,7 @@ namespace DiscordBot {
 		name: string;
 		type: ApplicationCommandOptionType.String;
 		filterType: "STARTS_WITH" | "CONTAINS";
-		run: (interaction: AutocompleteInteraction, value: string) => Promise<ApplicationCommandOptionChoice[]>;
+		run: (interaction: AutocompleteInteraction, value: string) => Promise<ApplicationCommandOptionChoiceData[]>;
 	}
 
 	interface AutocompleteHandlerNumberOption {

@@ -1,11 +1,22 @@
 import "dotenv/config";
 
-import Util from "./Util";
-import discordBot from "./discord-bot";
-import startProcess from "./util/startProcess";
+import Fs from "node:fs";
+import Path from "node:path";
 
-Util.processes.forEach((processConfig) => {
-	if (processConfig.autoStart) startProcess(processConfig);
+import Util from "./Util";
+
+// Events
+const eventFiles = Fs.readdirSync(Path.resolve(__dirname, "events")).filter((file) => file.endsWith(".js"));
+eventFiles.forEach((file) => {
+	const path = Path.resolve(__dirname, "events", file);
+	const event: RaspberryPi.Event = require(path).default ?? require(path);
+
+	if (event.once) {
+		Util.client.once(event.name, (...args) => event.run(...args).catch(console.error));
+	} else {
+		Util.client.on(event.name, (...args) => event.run(...args).catch(console.error));
+	}
 });
 
-discordBot.login(process.env.DISCORD_TOKEN);
+// Login
+Util.client.login(process.env.DISCORD_TOKEN);
