@@ -5,7 +5,7 @@ export default class Service {
 	private _pid?: number;
 
 	constructor(name: string) {
-		if (!/^[\w-]+$/.test(name))
+		if (!/^[\w-]+(?:@[\w+-]+)?$/.test(name))
 			throw new Error(`Name must only contain alphanumeric characters and dashes (-), received "${name}"`);
 		this.name = name;
 	}
