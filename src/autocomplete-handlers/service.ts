@@ -3,7 +3,7 @@ import Util from "../Util";
 import { ApplicationCommandOptionType } from "discord.js";
 
 const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
-	name: "control",
+	name: "service",
 	options: [
 		{
 			subCommandGroup: null,
