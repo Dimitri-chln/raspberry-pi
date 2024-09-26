@@ -1,6 +1,9 @@
 import ChildProcess from "node:child_process";
 
 export default class Service {
+	/**
+	 * The name of the service
+	 */
 	readonly name: string;
 	private _pid?: number;
 

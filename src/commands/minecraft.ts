@@ -1,11 +1,6 @@
 import Util from "../Util";
 
-import Fs from "node:fs";
-import Path from "node:path";
-import ChildProcess from "node:child_process";
 import { ApplicationCommandOptionType } from "discord.js";
-
-import ServerProperties from "../structures/MinecraftServerProperties";
 
 const command: RaspberryPi.Command = {
 	name: "minecraft",
@@ -97,7 +92,7 @@ const command: RaspberryPi.Command = {
 							color: Util.config.DEFAULT_EMBED_COLOR,
 							fields: await Promise.all(
 								Util.minecraftServers.map(async (minecraftServer) => ({
-									name: minecraftServer.name,
+									name: minecraftServer.serverName,
 									value: `>>> __**En ligne :**__ ${minecraftServer.isActive() ? "✅" : "❌"}`,
 								})),
 							),
@@ -156,7 +151,7 @@ const command: RaspberryPi.Command = {
 
 				await minecraftServer.saveServerProperties(serverProperties);
 
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
@@ -185,6 +180,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{
@@ -221,7 +217,7 @@ const command: RaspberryPi.Command = {
 					return;
 				}
 
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
@@ -250,6 +246,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{
@@ -286,7 +283,7 @@ const command: RaspberryPi.Command = {
 					return;
 				}
 
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
@@ -315,6 +312,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{
@@ -351,7 +349,7 @@ const command: RaspberryPi.Command = {
 					return;
 				}
 
-				interaction.reply({
+				await interaction.reply({
 					embeds: [
 						{
 							author: {
@@ -380,6 +378,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{

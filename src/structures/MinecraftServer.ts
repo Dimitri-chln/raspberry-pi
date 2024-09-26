@@ -8,29 +8,38 @@ import Path from "node:path";
 import ServerProperties from "./MinecraftServerProperties";
 
 export default class MinecraftServer extends Service {
+	/**
+	 * The name of the server
+	 */
+	readonly serverName: string;
+
 	constructor(name: string) {
 		super(`minecraft@${name}`);
+		this.serverName = name;
 
 		if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups")))
 			Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups"));
 	}
 
 	async serverProperties(): Promise<ServerProperties> {
-		const file = await FsAsync.readFile(Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "server.properties"), {
-			encoding: "utf8",
-		});
+		const file = await FsAsync.readFile(
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "server.properties"),
+			{
+				encoding: "utf8",
+			},
+		);
 		return new ServerProperties(file);
 	}
 
 	async saveServerProperties(serverProperties: ServerProperties): Promise<void> {
 		await FsAsync.writeFile(
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "server.properties"),
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "server.properties"),
 			serverProperties.stringify(),
 		);
 	}
 
 	async backups(): Promise<string[]> {
-		const backups = await FsAsync.readdir(Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "backups"));
+		const backups = await FsAsync.readdir(Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "backups"));
 		return backups;
 	}
 
@@ -42,8 +51,8 @@ export default class MinecraftServer extends Service {
 		const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
 		await FsAsync.cp(
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "world"),
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.name, "backups", backupName),
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "world"),
+			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "backups", backupName),
 			{
 				recursive: true,
 			},

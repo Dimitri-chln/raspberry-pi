@@ -139,6 +139,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.reply({
 						content: `Impossible de lire les logs du service ${service.name}`,
 						ephemeral: true,
@@ -196,7 +197,8 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
-					await interaction.editReply({
+					console.error(err);
+					interaction.editReply({
 						embeds: [
 							{
 								author: {
@@ -262,6 +264,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{
@@ -327,6 +330,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{
@@ -392,6 +396,7 @@ const command: RaspberryPi.Command = {
 						],
 					});
 				} catch (err) {
+					console.error(err);
 					interaction.editReply({
 						embeds: [
 							{

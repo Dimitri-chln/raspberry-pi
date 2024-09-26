@@ -16,8 +16,8 @@ const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
 				const minecraftServers = Util.minecraftServers.filter((minecraftServer) => !minecraftServer.isActive());
 
 				return minecraftServers.map((minecraftServer) => ({
-					name: minecraftServer.name,
-					value: minecraftServer.name,
+					name: minecraftServer.serverName,
+					value: minecraftServer.serverName,
 				}));
 			},
 		},
@@ -52,8 +52,8 @@ const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
 				const minecraftServers = Util.minecraftServers.filter((minecraftServer) => minecraftServer.isActive());
 
 				return minecraftServers.map((minecraftServer) => ({
-					name: minecraftServer.name,
-					value: minecraftServer.name,
+					name: minecraftServer.serverName,
+					value: minecraftServer.serverName,
 				}));
 			},
 		},
@@ -68,8 +68,8 @@ const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
 				const minecraftServers = Util.minecraftServers.filter((minecraftServer) => !minecraftServer.isActive());
 
 				return minecraftServers.map((minecraftServer) => ({
-					name: minecraftServer.name,
-					value: minecraftServer.name,
+					name: minecraftServer.serverName,
+					value: minecraftServer.serverName,
 				}));
 			},
 		},
@@ -84,8 +84,8 @@ const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
 				const minecraftServers = Util.minecraftServers.filter((minecraftServer) => minecraftServer.isActive());
 
 				return minecraftServers.map((minecraftServer) => ({
-					name: minecraftServer.name,
-					value: minecraftServer.name,
+					name: minecraftServer.serverName,
+					value: minecraftServer.serverName,
 				}));
 			},
 		},
