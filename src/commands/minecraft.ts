@@ -383,7 +383,7 @@ const command: RaspberryPi.Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Une erreur est survenie lors de la création nouvelle backup pour le serveur **\`${minecraftServerName}\`**`,
+								description: `Une erreur est survenue lors de la création nouvelle backup pour le serveur **\`${minecraftServerName}\`**`,
 							},
 						],
 					});

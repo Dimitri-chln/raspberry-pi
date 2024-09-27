@@ -56,7 +56,7 @@ export default class MinecraftServer extends Service {
 	}
 
 	async loadBackup(name: string): Promise<void> {
-		const backups = await FsAsync.readdir(this.backupsDirectory);
+		const backups = await this.backups();
 		if (!backups.includes(name)) throw new Error("Invalid backup");
 
 		const serverProperties = await this.serverProperties();
@@ -66,7 +66,7 @@ export default class MinecraftServer extends Service {
 
 	async loadWorld(): Promise<void> {
 		const serverProperties = await this.serverProperties();
-		serverProperties.set("level-name", `world`);
+		serverProperties.set("level-name", "world");
 		await this.saveServerProperties(serverProperties);
 	}
 }
