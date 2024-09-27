@@ -1,9 +1,8 @@
-import Util from "../Util";
 import Service from "./Service";
 
-import Fs from "node:fs";
 import FsAsync from "node:fs/promises";
 import Path from "node:path";
+import ChildProcess from "node:child_process";
 
 import ServerProperties from "./MinecraftServerProperties";
 
@@ -12,34 +11,35 @@ export default class MinecraftServer extends Service {
 	 * The name of the server
 	 */
 	readonly serverName: string;
+	/**
+	 * The name of the directory where the server is saved
+	 */
+	readonly serverDirectory: string;
+	/**
+	 * The name of the directory where the server backups are saved
+	 */
+	readonly backupsDirectory: string;
 
 	constructor(name: string) {
 		super(`minecraft@${name}`);
 		this.serverName = name;
-
-		if (!Fs.existsSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups")))
-			Fs.mkdirSync(Path.join(process.env.MINECRAFT_SERVERS_PATH, name, "backups"));
+		this.serverDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name);
+		this.backupsDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name, "backups");
 	}
 
 	async serverProperties(): Promise<ServerProperties> {
-		const file = await FsAsync.readFile(
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "server.properties"),
-			{
-				encoding: "utf8",
-			},
-		);
+		const file = await FsAsync.readFile(Path.join(this.serverDirectory, "server.properties"), {
+			encoding: "utf8",
+		});
 		return new ServerProperties(file);
 	}
 
 	async saveServerProperties(serverProperties: ServerProperties): Promise<void> {
-		await FsAsync.writeFile(
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "server.properties"),
-			serverProperties.stringify(),
-		);
+		await FsAsync.writeFile(Path.join(this.serverDirectory, "server.properties"), serverProperties.stringify());
 	}
 
 	async backups(): Promise<string[]> {
-		const backups = await FsAsync.readdir(Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "backups"));
+		const backups = await FsAsync.readdir(this.backupsDirectory);
 		return backups;
 	}
 
@@ -50,14 +50,23 @@ export default class MinecraftServer extends Service {
 		const dayString = now.getDate().toString().padStart(2, "0");
 		const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
-		await FsAsync.cp(
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "world"),
-			Path.join(process.env.MINECRAFT_SERVERS_PATH, this.serverName, "backups", backupName),
-			{
-				recursive: true,
-			},
-		);
+		ChildProcess.execFileSync(process.env.CREATE_BACKUP_BIN, [this.serverName, backupName]);
 
 		return backupName;
+	}
+
+	async loadBackup(name: string): Promise<void> {
+		const backups = await FsAsync.readdir(this.backupsDirectory);
+		if (!backups.includes(name)) throw new Error("Invalid backup");
+
+		const serverProperties = await this.serverProperties();
+		serverProperties.set("level-name", `backups/${name}`);
+		await this.saveServerProperties(serverProperties);
+	}
+
+	async loadWorld(): Promise<void> {
+		const serverProperties = await this.serverProperties();
+		serverProperties.set("level-name", `world`);
+		await this.saveServerProperties(serverProperties);
 	}
 }

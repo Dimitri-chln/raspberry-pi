@@ -132,8 +132,6 @@ const command: RaspberryPi.Command = {
 					return;
 				}
 
-				const serverProperties = await minecraftServer.serverProperties();
-
 				if (backup) {
 					const backups = await minecraftServer.backups();
 					if (!backups.includes(backup)) {
@@ -144,12 +142,10 @@ const command: RaspberryPi.Command = {
 						return;
 					}
 
-					serverProperties.set("level-name", `backups/${backup}`);
+					await minecraftServer.loadBackup(backup);
 				} else {
-					serverProperties.set("level-name", "world");
+					await minecraftServer.loadWorld();
 				}
-
-				await minecraftServer.saveServerProperties(serverProperties);
 
 				await interaction.reply({
 					embeds: [

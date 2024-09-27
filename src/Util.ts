@@ -21,7 +21,7 @@ export default class Util {
 	);
 
 	static readonly minecraftServers: Collection<string, MinecraftServer> = new Collection(
-		Fs.readdirSync(process.env.MINECRAFT_SERVERS_PATH).map(
+		Fs.readdirSync(Path.join(process.env.MINECRAFT_PATH, "servers")).map(
 			(serverName) => [serverName, new MinecraftServer(serverName)] as [string, MinecraftServer],
 		),
 	);
