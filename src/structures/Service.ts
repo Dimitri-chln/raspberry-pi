@@ -24,7 +24,7 @@ export default class Service {
 
 	async start(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`${process.env.SYSTEMCTL_SUDO_BIN} start ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl start ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 
 				ChildProcess.exec(`systemctl show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
@@ -38,7 +38,7 @@ export default class Service {
 
 	async stop(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`${process.env.SYSTEMCTL_SUDO_BIN} stop ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl stop ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 				this._pid = null;
 				resolve();
@@ -48,7 +48,7 @@ export default class Service {
 
 	async restart(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`${process.env.SYSTEMCTL_SUDO_BIN} restart ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl restart ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 
 				ChildProcess.exec(`systemctl show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
@@ -62,7 +62,7 @@ export default class Service {
 
 	async reload(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`${process.env.SYSTEMCTL_SUDO_BIN} reload ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl reload ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 				resolve();
 			});
