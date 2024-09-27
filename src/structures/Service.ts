@@ -18,7 +18,7 @@ export default class Service {
 	}
 
 	isActive(): boolean {
-		const systemctl = ChildProcess.spawnSync(`systemctl is-active --quiet ${this.name}`);
+		const systemctl = ChildProcess.spawnSync("systemctl", ["is-active", "--quiet", this.name]);
 		return systemctl.status === 0;
 	}
 
