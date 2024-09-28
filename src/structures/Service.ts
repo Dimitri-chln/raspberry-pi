@@ -24,7 +24,7 @@ export default class Service {
 
 	async start(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`systemctl start ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl --user start ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 
 				ChildProcess.exec(`systemctl --user show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
