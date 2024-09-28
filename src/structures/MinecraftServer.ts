@@ -2,7 +2,6 @@ import Service from "./Service";
 
 import FsAsync from "node:fs/promises";
 import Path from "node:path";
-import ChildProcess from "node:child_process";
 
 import ServerProperties from "./MinecraftServerProperties";
 
@@ -50,7 +49,9 @@ export default class MinecraftServer extends Service {
 		const dayString = now.getDate().toString().padStart(2, "0");
 		const backupName = `backup-${yearString}-${monthString}-${dayString}-${now.getTime().toString(16)}`;
 
-		ChildProcess.execFileSync(process.env.CREATE_BACKUP_BIN, [this.serverName, backupName]);
+		await FsAsync.cp(Path.join(this.serverDirectory, "world"), Path.join(this.backupsDirectory, backupName), {
+			recursive: true,
+		});
 
 		return backupName;
 	}
