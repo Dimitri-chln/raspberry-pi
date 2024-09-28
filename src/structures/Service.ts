@@ -18,7 +18,7 @@ export default class Service {
 	}
 
 	isActive(): boolean {
-		const systemctl = ChildProcess.spawnSync("systemctl", ["is-active", "--quiet", this.name]);
+		const systemctl = ChildProcess.spawnSync("systemctl", ["--user", "is-active", "--quiet", this.name]);
 		return systemctl.status === 0;
 	}
 
@@ -27,7 +27,7 @@ export default class Service {
 			ChildProcess.exec(`systemctl start ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 
-				ChildProcess.exec(`systemctl show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
+				ChildProcess.exec(`systemctl --user show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
 					if (error) return reject(error);
 					this._pid = parseInt(stdout);
 					resolve();
@@ -38,7 +38,7 @@ export default class Service {
 
 	async stop(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`systemctl stop ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl --user stop ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 				this._pid = null;
 				resolve();
@@ -48,10 +48,10 @@ export default class Service {
 
 	async restart(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`systemctl restart ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl --user restart ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 
-				ChildProcess.exec(`systemctl show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
+				ChildProcess.exec(`systemctl --user show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
 					if (error) return reject(error);
 					this._pid = parseInt(stdout);
 					resolve();
@@ -62,7 +62,7 @@ export default class Service {
 
 	async reload(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`systemctl reload ${this.name}`, (error, stdout, stderr) => {
+			ChildProcess.exec(`systemctl --user reload ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 				resolve();
 			});
@@ -71,10 +71,13 @@ export default class Service {
 
 	async logs(lines: number): Promise<string> {
 		return new Promise((resolve, reject) => {
-			ChildProcess.exec(`journalctl --unit=${this.name} --lines=${lines} --no-pager`, (error, stdout, stderr) => {
-				if (error) return reject(error);
-				resolve(stdout);
-			});
+			ChildProcess.exec(
+				`journalctl --user --unit=${this.name} --lines=${lines} --no-pager`,
+				(error, stdout, stderr) => {
+					if (error) return reject(error);
+					resolve(stdout);
+				},
+			);
 		});
 	}
 }
