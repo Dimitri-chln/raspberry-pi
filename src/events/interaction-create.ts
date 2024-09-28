@@ -13,7 +13,25 @@ const event: RaspberryPi.Event = {
 					const command = Util.commands.get(interaction.commandName);
 					if (!command) return;
 
-					command.run(interaction).catch(console.error);
+					try {
+						await command.run(interaction);
+					} catch (err) {
+						if (interaction.replied) {
+							interaction
+								.followUp({
+									content: `Quelque chose c'est mal passé en exécutant la commande </:${interaction.command.id}>`,
+									ephemeral: true,
+								})
+								.catch(console.error);
+						} else {
+							interaction
+								.reply({
+									content: `Quelque chose c'est mal passé en exécutant la commande </:${interaction.command.id}>`,
+									ephemeral: true,
+								})
+								.catch(console.error);
+						}
+					}
 				}
 
 				break;
