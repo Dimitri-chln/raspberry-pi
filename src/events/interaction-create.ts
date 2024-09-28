@@ -16,21 +16,12 @@ const event: RaspberryPi.Event = {
 					try {
 						await command.run(interaction);
 					} catch (err) {
-						if (interaction.replied) {
-							interaction
-								.followUp({
-									content: `Quelque chose c'est mal passé en exécutant la commande </:${interaction.command.id}>`,
-									ephemeral: true,
-								})
-								.catch(console.error);
-						} else {
-							interaction
-								.reply({
-									content: `Quelque chose c'est mal passé en exécutant la commande </:${interaction.command.id}>`,
-									ephemeral: true,
-								})
-								.catch(console.error);
-						}
+						const reply = interaction.replied ? interaction.reply : interaction.followUp;
+
+						reply({
+							content: `Quelque chose c'est mal passé en exécutant la commande </${interaction.command.name}:${interaction.command.id}>`,
+							ephemeral: true,
+						}).catch(console.error);
 					}
 				}
 
