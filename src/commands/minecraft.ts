@@ -33,7 +33,7 @@ const command: RaspberryPi.Command = {
 				{
 					type: ApplicationCommandOptionType.Boolean,
 					name: "resource-pack",
-					description: "Activation du resource-pack côté serveur",
+					description: "Activer le resource-pack côté serveur",
 					required: false,
 				},
 			],
