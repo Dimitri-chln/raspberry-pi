@@ -7,6 +7,12 @@
 		"start": "node .",
 		"build": "tsc"
 	},
+	"dependencies": {
+		"axios": "^1.7.7",
+		"cron": "^3.1.7",
+		"discord.js": "^14.14.1",
+		"dotenv": "^16.4.5"
+	},
 	"devDependencies": {
 		"typescript": "^5.3.3"
 	},
@@ -17,10 +23,5 @@
 		"type": "git",
 		"url": "https://github.com/Dimitri-chln/raspberry-pi.git"
 	},
-	"license": "MIT",
-	"dependencies": {
-		"cron": "^3.1.7",
-		"discord.js": "^14.14.1",
-		"dotenv": "^16.4.5"
-	}
+	"license": "MIT"
 }

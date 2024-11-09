@@ -30,6 +30,12 @@ const command: RaspberryPi.Command = {
 					required: false,
 					autocomplete: true,
 				},
+				{
+					type: ApplicationCommandOptionType.Boolean,
+					name: "resource-pack",
+					description: "Activation du resource-pack côté serveur",
+					required: false,
+				},
 			],
 		},
 		{
@@ -105,6 +111,7 @@ const command: RaspberryPi.Command = {
 			case "start": {
 				const minecraftServerName = interaction.options.getString("server", true);
 				const backup = interaction.options.getString("backup", false);
+				const enableResourcePack = interaction.options.getBoolean("resource-pack", false) ?? false;
 				const minecraftServer = Util.minecraftServers.get(minecraftServerName);
 
 				if (!minecraftServer) {
@@ -146,6 +153,8 @@ const command: RaspberryPi.Command = {
 				} else {
 					await minecraftServer.loadWorld();
 				}
+
+				await minecraftServer.toggleResourcePack(enableResourcePack);
 
 				await interaction.reply({
 					embeds: [

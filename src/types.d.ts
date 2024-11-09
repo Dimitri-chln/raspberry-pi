@@ -126,4 +126,9 @@ namespace RaspberryPi {
 		"view-distance": number;
 		"white-list": boolean;
 	}
+
+	interface MinecraftResourcePackMetadata {
+		uuid: string;
+		checksum: string;
+	}
 }

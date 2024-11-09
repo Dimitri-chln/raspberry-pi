@@ -2,6 +2,7 @@ import Service from "./Service";
 
 import FsAsync from "node:fs/promises";
 import Path from "node:path";
+import Axios from "axios";
 
 import ServerProperties from "./MinecraftServerProperties";
 
@@ -69,5 +70,36 @@ export default class MinecraftServer extends Service {
 		const serverProperties = await this.serverProperties();
 		serverProperties.set("level-name", "world");
 		await this.saveServerProperties(serverProperties);
+	}
+
+	async toggleResourcePack(enable: boolean): Promise<void> {
+		const serverProperties = await this.serverProperties();
+
+		if (enable) {
+			let metadata: RaspberryPi.MinecraftResourcePackMetadata = {
+				uuid: null,
+				checksum: null,
+			};
+
+			try {
+				metadata = (
+					await Axios.get<RaspberryPi.MinecraftResourcePackMetadata>(
+						`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${this.serverName}`,
+					)
+				).data;
+			} catch (err) {
+				console.error(err);
+			}
+
+			serverProperties.set("require-resource-pack", true);
+			serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
+			serverProperties.set("resource-pack-id", metadata.uuid);
+			serverProperties.set("resource-pack-sha1", metadata.checksum);
+		} else {
+			serverProperties.set("require-resource-pack", false);
+			serverProperties.set("resource-pack", null);
+			serverProperties.set("resource-pack-id", null);
+			serverProperties.set("resource-pack-sha1", null);
+		}
 	}
 }
