@@ -75,22 +75,28 @@ export default class MinecraftServer extends Service {
 	async toggleResourcePack(enable: boolean): Promise<void> {
 		const serverProperties = await this.serverProperties();
 
+		let metadata: RaspberryPi.MinecraftResourcePackMetadata = {
+			uuid: null,
+			checksum: null,
+		};
+
+		const response = await Axios.get<RaspberryPi.MinecraftResourcePackMetadata>(
+			`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${this.serverName}`,
+		).catch(console.error);
+		if (!response) return;
+
+		switch (response.status) {
+			case 200:
+				metadata = response.data;
+				break;
+			case 404:
+				enable = false;
+				break;
+			default:
+				return;
+		}
+
 		if (enable) {
-			let metadata: RaspberryPi.MinecraftResourcePackMetadata = {
-				uuid: null,
-				checksum: null,
-			};
-
-			try {
-				metadata = (
-					await Axios.get<RaspberryPi.MinecraftResourcePackMetadata>(
-						`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${this.serverName}`,
-					)
-				).data;
-			} catch (err) {
-				console.error(err);
-			}
-
 			serverProperties.set("require-resource-pack", true);
 			serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
 			serverProperties.set("resource-pack-id", metadata.uuid);
