@@ -97,7 +97,7 @@ export default class MinecraftServer extends Service {
 		}
 
 		serverProperties.set("require-resource-pack", true);
-		serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
+		serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${resourcePack}.zip`);
 		serverProperties.set("resource-pack-id", metadata.uuid);
 		serverProperties.set("resource-pack-sha1", metadata.checksum);
 
