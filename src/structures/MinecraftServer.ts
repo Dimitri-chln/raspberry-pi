@@ -81,12 +81,10 @@ export default class MinecraftServer extends Service {
 		};
 
 		const response = await Axios.get<RaspberryPi.MinecraftResourcePackMetadata>(
-			`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${resourcePack ?? this.serverName}`,
+			`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${resourcePack ?? this.serverName}.json`,
 			{ validateStatus: (status) => (status >= 200 && status < 300) || status == 404 },
 		).catch(console.error);
 		if (!response) return;
-
-		console.log(response.data);
 
 		switch (response.status) {
 			case 200:
@@ -102,8 +100,6 @@ export default class MinecraftServer extends Service {
 		serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
 		serverProperties.set("resource-pack-id", metadata.uuid);
 		serverProperties.set("resource-pack-sha1", metadata.checksum);
-
-		console.log("ok");
 
 		await this.saveServerProperties(serverProperties);
 	}
