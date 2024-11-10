@@ -172,7 +172,7 @@ const command: RaspberryPi.Command = {
 						await minecraftServer.disableResourcePack();
 						break;
 					case MinecraftResourcePack.ServerSpecific:
-						await minecraftServer.enableResourcePack(minecraftServer.serverName);
+						await minecraftServer.enableResourcePack();
 						break;
 					case MinecraftResourcePack.BackupSpecific:
 						if (backup) await minecraftServer.enableResourcePack(backup);

@@ -86,6 +86,8 @@ export default class MinecraftServer extends Service {
 		).catch(console.error);
 		if (!response) return;
 
+		console.log(response.data);
+
 		switch (response.status) {
 			case 200:
 				metadata = response.data;
@@ -101,7 +103,9 @@ export default class MinecraftServer extends Service {
 		serverProperties.set("resource-pack-id", metadata.uuid);
 		serverProperties.set("resource-pack-sha1", metadata.checksum);
 
-		this.saveServerProperties(serverProperties);
+		console.log("ok");
+
+		await this.saveServerProperties(serverProperties);
 	}
 
 	async disableResourcePack(): Promise<void> {
@@ -112,6 +116,6 @@ export default class MinecraftServer extends Service {
 		serverProperties.set("resource-pack-id", null);
 		serverProperties.set("resource-pack-sha1", null);
 
-		this.saveServerProperties(serverProperties);
+		await this.saveServerProperties(serverProperties);
 	}
 }
