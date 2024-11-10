@@ -31,10 +31,20 @@ const command: RaspberryPi.Command = {
 					autocomplete: true,
 				},
 				{
-					type: ApplicationCommandOptionType.Boolean,
+					type: ApplicationCommandOptionType.Integer,
 					name: "resource-pack",
-					description: "Activer le resource-pack côté serveur",
+					description: "Activer un resource-pack côté serveur",
 					required: false,
+					choices: [
+						{
+							name: "Spécifique au serveur",
+							value: RaspberryPi.MinecraftResourcePackName.ServerSpecific,
+						},
+						{
+							name: "Spécifique à la backup lancée (le cas échéant)",
+							value: RaspberryPi.MinecraftResourcePackName.BackupSpecific,
+						},
+					],
 				},
 			],
 		},
@@ -111,7 +121,9 @@ const command: RaspberryPi.Command = {
 			case "start": {
 				const minecraftServerName = interaction.options.getString("server", true);
 				const backup = interaction.options.getString("backup", false);
-				const enableResourcePack = interaction.options.getBoolean("resource-pack", false) ?? false;
+				const resourcePack =
+					interaction.options.getInteger("resource-pack", false) ??
+					RaspberryPi.MinecraftResourcePackName.NoResourcePack;
 				const minecraftServer = Util.minecraftServers.get(minecraftServerName);
 
 				if (!minecraftServer) {
@@ -154,7 +166,18 @@ const command: RaspberryPi.Command = {
 					await minecraftServer.loadWorld();
 				}
 
-				await minecraftServer.toggleResourcePack(enableResourcePack);
+				switch (resourcePack) {
+					case RaspberryPi.MinecraftResourcePackName.NoResourcePack:
+						await minecraftServer.disableResourcePack();
+						break;
+					case RaspberryPi.MinecraftResourcePackName.ServerSpecific:
+						await minecraftServer.enableResourcePack(minecraftServer.serverName);
+						break;
+					case RaspberryPi.MinecraftResourcePackName.BackupSpecific:
+						if (backup) await minecraftServer.enableResourcePack(backup);
+						else await minecraftServer.disableResourcePack();
+						break;
+				}
 
 				await interaction.reply({
 					embeds: [

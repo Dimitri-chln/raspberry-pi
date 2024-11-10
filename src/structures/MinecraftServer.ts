@@ -72,7 +72,7 @@ export default class MinecraftServer extends Service {
 		await this.saveServerProperties(serverProperties);
 	}
 
-	async toggleResourcePack(enable: boolean): Promise<void> {
+	async enableResourcePack(resourcePack?: string): Promise<void> {
 		const serverProperties = await this.serverProperties();
 
 		let metadata: RaspberryPi.MinecraftResourcePackMetadata = {
@@ -81,7 +81,8 @@ export default class MinecraftServer extends Service {
 		};
 
 		const response = await Axios.get<RaspberryPi.MinecraftResourcePackMetadata>(
-			`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${this.serverName}`,
+			`${process.env.MINECRAFT_RESOURCE_PACKS_URL}/metadata/${resourcePack ?? this.serverName}`,
+			{ validateStatus: (status) => (status >= 200 && status < 300) || status == 404 },
 		).catch(console.error);
 		if (!response) return;
 
@@ -90,22 +91,27 @@ export default class MinecraftServer extends Service {
 				metadata = response.data;
 				break;
 			case 404:
-				enable = false;
-				break;
+				return this.disableResourcePack();
 			default:
 				return;
 		}
 
-		if (enable) {
-			serverProperties.set("require-resource-pack", true);
-			serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
-			serverProperties.set("resource-pack-id", metadata.uuid);
-			serverProperties.set("resource-pack-sha1", metadata.checksum);
-		} else {
-			serverProperties.set("require-resource-pack", false);
-			serverProperties.set("resource-pack", null);
-			serverProperties.set("resource-pack-id", null);
-			serverProperties.set("resource-pack-sha1", null);
-		}
+		serverProperties.set("require-resource-pack", true);
+		serverProperties.set("resource-pack", `${process.env.MINECRAFT_RESOURCE_PACKS_URL}/${this.serverName}`);
+		serverProperties.set("resource-pack-id", metadata.uuid);
+		serverProperties.set("resource-pack-sha1", metadata.checksum);
+
+		this.saveServerProperties(serverProperties);
+	}
+
+	async disableResourcePack(): Promise<void> {
+		const serverProperties = await this.serverProperties();
+
+		serverProperties.set("require-resource-pack", false);
+		serverProperties.set("resource-pack", null);
+		serverProperties.set("resource-pack-id", null);
+		serverProperties.set("resource-pack-sha1", null);
+
+		this.saveServerProperties(serverProperties);
 	}
 }
