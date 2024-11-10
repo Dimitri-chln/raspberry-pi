@@ -127,12 +127,6 @@ namespace RaspberryPi {
 		"white-list": boolean;
 	}
 
-	enum MinecraftResourcePackName {
-		NoResourcePack = 1,
-		ServerSpecific = 2,
-		BackupSpecific = 3,
-	}
-
 	interface MinecraftResourcePackMetadata {
 		uuid: string;
 		checksum: string;

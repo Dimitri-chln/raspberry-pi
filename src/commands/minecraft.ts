@@ -2,6 +2,8 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType } from "discord.js";
 
+import { MinecraftResourcePack } from "../types/enums";
+
 const command: RaspberryPi.Command = {
 	name: "minecraft",
 	description: "Gérer les serveurs Minecraft de la Raspberry",
@@ -38,11 +40,11 @@ const command: RaspberryPi.Command = {
 					choices: [
 						{
 							name: "Spécifique au serveur",
-							value: RaspberryPi.MinecraftResourcePackName.ServerSpecific,
+							value: MinecraftResourcePack.ServerSpecific,
 						},
 						{
 							name: "Spécifique à la backup lancée (le cas échéant)",
-							value: RaspberryPi.MinecraftResourcePackName.BackupSpecific,
+							value: MinecraftResourcePack.BackupSpecific,
 						},
 					],
 				},
@@ -122,8 +124,7 @@ const command: RaspberryPi.Command = {
 				const minecraftServerName = interaction.options.getString("server", true);
 				const backup = interaction.options.getString("backup", false);
 				const resourcePack =
-					interaction.options.getInteger("resource-pack", false) ??
-					RaspberryPi.MinecraftResourcePackName.NoResourcePack;
+					interaction.options.getInteger("resource-pack", false) ?? MinecraftResourcePack.NoResourcePack;
 				const minecraftServer = Util.minecraftServers.get(minecraftServerName);
 
 				if (!minecraftServer) {
@@ -167,13 +168,13 @@ const command: RaspberryPi.Command = {
 				}
 
 				switch (resourcePack) {
-					case RaspberryPi.MinecraftResourcePackName.NoResourcePack:
+					case MinecraftResourcePack.NoResourcePack:
 						await minecraftServer.disableResourcePack();
 						break;
-					case RaspberryPi.MinecraftResourcePackName.ServerSpecific:
+					case MinecraftResourcePack.ServerSpecific:
 						await minecraftServer.enableResourcePack(minecraftServer.serverName);
 						break;
-					case RaspberryPi.MinecraftResourcePackName.BackupSpecific:
+					case MinecraftResourcePack.BackupSpecific:
 						if (backup) await minecraftServer.enableResourcePack(backup);
 						else await minecraftServer.disableResourcePack();
 						break;
