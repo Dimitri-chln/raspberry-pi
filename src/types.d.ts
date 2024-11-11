@@ -131,4 +131,17 @@ namespace RaspberryPi {
 		uuid: string;
 		checksum: string;
 	}
+
+	interface MinecraftServerBackupMetadata {
+		name: string;
+		version: string;
+		resourcePack?: MinecraftResourcePackMetadata;
+	}
+
+	interface MinecraftServerMetadata {
+		name: string;
+		version: string;
+		resourcePack?: MinecraftResourcePackMetadata;
+		backups: MinecraftServerBackupMetadata[];
+	}
 }

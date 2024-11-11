@@ -32,22 +32,6 @@ const command: RaspberryPi.Command = {
 					required: false,
 					autocomplete: true,
 				},
-				{
-					type: ApplicationCommandOptionType.Integer,
-					name: "resource-pack",
-					description: "Activer un resource-pack côté serveur",
-					required: false,
-					choices: [
-						{
-							name: "Spécifique au serveur",
-							value: MinecraftResourcePack.ServerSpecific,
-						},
-						{
-							name: "Spécifique à la backup lancée (le cas échéant)",
-							value: MinecraftResourcePack.BackupSpecific,
-						},
-					],
-				},
 			],
 		},
 		{
@@ -123,8 +107,6 @@ const command: RaspberryPi.Command = {
 			case "start": {
 				const minecraftServerName = interaction.options.getString("server", true);
 				const backup = interaction.options.getString("backup", false);
-				const resourcePack =
-					interaction.options.getInteger("resource-pack", false) ?? MinecraftResourcePack.NoResourcePack;
 				const minecraftServer = Util.minecraftServers.get(minecraftServerName);
 
 				if (!minecraftServer) {
@@ -165,19 +147,6 @@ const command: RaspberryPi.Command = {
 					await minecraftServer.loadBackup(backup);
 				} else {
 					await minecraftServer.loadWorld();
-				}
-
-				switch (resourcePack) {
-					case MinecraftResourcePack.NoResourcePack:
-						await minecraftServer.disableResourcePack();
-						break;
-					case MinecraftResourcePack.ServerSpecific:
-						await minecraftServer.enableResourcePack();
-						break;
-					case MinecraftResourcePack.BackupSpecific:
-						if (backup) await minecraftServer.enableResourcePack(backup);
-						else await minecraftServer.disableResourcePack();
-						break;
 				}
 
 				await interaction.reply({
