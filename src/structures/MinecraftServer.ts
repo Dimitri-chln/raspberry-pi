@@ -109,7 +109,7 @@ export default class MinecraftServer extends Service {
 		return new Promise((resolve, reject) => {
 			setTimeout(reject, timeoutMs);
 
-			const journalctl = ChildProcess.spawn(`journalctl --user --unit=${this.name} --follow --no-pager`);
+			const journalctl = ChildProcess.spawn("journalctl", ["--user", `--unit=${this.name}`, "--follow", "--no-pager"]);
 
 			journalctl.on("exit", reject);
 			journalctl.on("error", reject);
