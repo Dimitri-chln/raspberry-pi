@@ -131,7 +131,7 @@ export default class MinecraftServer extends Service {
 
 		const resourcePackUrl = `${process.env.MINECRAFT_METADATA_URL}/resource-packs/${resourcePack.uuid}.zip`;
 		serverProperties.set("require-resource-pack", true);
-		serverProperties.set("resource-pack", resourcePackUrl.replace(/[:=]/g, "\\$1"));
+		serverProperties.set("resource-pack", resourcePackUrl.replace(/([:=])/g, "\\$1"));
 		serverProperties.set("resource-pack-id", resourcePack.uuid);
 		serverProperties.set("resource-pack-sha1", resourcePack.checksum);
 
