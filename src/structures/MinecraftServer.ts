@@ -134,9 +134,11 @@ export default class MinecraftServer extends Service {
 	}
 
 	private async updateServer(version: string): Promise<void> {
+		const versionArg = version === "latest" ? "" : version;
+
 		return new Promise((resolve, reject) => {
 			ChildProcess.exec(
-				`${process.env.MINECRAFT_SERVER_UPDATE_BIN} ${this.serverName} ${version}`,
+				`${process.env.MINECRAFT_SERVER_UPDATE_BIN} ${this.serverName} ${versionArg}`,
 				async (error, stdout, stderr) => {
 					if (error) return reject(error);
 					await this.saveVersion(version);
