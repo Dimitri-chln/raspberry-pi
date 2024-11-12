@@ -105,6 +105,20 @@ export default class MinecraftServer extends Service {
 		else await this.disableResourcePack();
 	}
 
+	async waitForServer(timeoutMs: number): Promise<void> {
+		return new Promise((resolve, reject) => {
+			setTimeout(reject, timeoutMs);
+
+			const journalctl = ChildProcess.spawn(`journalctl --user --unit=${this.name} --follow --no-pager`);
+
+			journalctl.on("exit", reject);
+			journalctl.on("error", reject);
+			journalctl.on("message", (message) => {
+				if (/Done \(\d+\.\d+s\)!/.test(message.toString())) resolve();
+			});
+		});
+	}
+
 	private async metadata(): Promise<RaspberryPi.MinecraftServerMetadata> {
 		const response = await Axios.get<RaspberryPi.MinecraftServerMetadata>(
 			`${process.env.MINECRAFT_METADATA_URL}/servers/${this.serverName}.json`,

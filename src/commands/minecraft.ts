@@ -164,6 +164,7 @@ const command: RaspberryPi.Command = {
 
 				try {
 					await minecraftServer.start();
+					await minecraftServer.waitForServer(30_000);
 
 					interaction.editReply({
 						embeds: [
