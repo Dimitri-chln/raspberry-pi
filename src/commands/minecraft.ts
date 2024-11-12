@@ -136,6 +136,7 @@ const command: RaspberryPi.Command = {
 
 				if (backup) {
 					const backups = await minecraftServer.backups();
+
 					if (!backups.includes(backup)) {
 						interaction.reply({
 							content: "Cette backup n'existe pas",
@@ -143,10 +144,6 @@ const command: RaspberryPi.Command = {
 						});
 						return;
 					}
-
-					await minecraftServer.loadBackup(backup);
-				} else {
-					await minecraftServer.loadWorld();
 				}
 
 				await interaction.reply({
@@ -161,6 +158,9 @@ const command: RaspberryPi.Command = {
 						},
 					],
 				});
+
+				if (backup) await minecraftServer.loadBackup(backup);
+				else await minecraftServer.loadWorld();
 
 				try {
 					await minecraftServer.start();
