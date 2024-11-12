@@ -82,14 +82,13 @@ export default class MinecraftServer extends Service {
 
 		// Load version and resource-pack
 		const metadata = await this.metadata();
-		const backupMetadata = metadata?.backups?.find((backupMetadata) => backupMetadata.name === name);
+		const backupMetadata = metadata.backups?.find((backupMetadata) => backupMetadata.name === name);
+		if (!backupMetadata) throw new Error("No metadata found for backup");
 
-		if (backupMetadata) {
-			const currentVersion = await this.version();
-			if (!currentVersion || currentVersion !== backupMetadata.version) await this.updateServer(backupMetadata.version);
-			if (backupMetadata.resourcePack) await this.enableResourcePack(backupMetadata.resourcePack);
-			else await this.disableResourcePack();
-		}
+		const currentVersion = await this.version();
+		if (!currentVersion || currentVersion !== backupMetadata.version) await this.updateServer(backupMetadata.version);
+		if (backupMetadata.resourcePack) await this.enableResourcePack(backupMetadata.resourcePack);
+		else await this.disableResourcePack();
 	}
 
 	async loadWorld(): Promise<void> {
@@ -100,12 +99,10 @@ export default class MinecraftServer extends Service {
 		// Load version and resource-pack
 		const metadata = await this.metadata();
 
-		if (metadata) {
-			const currentVersion = await this.version();
-			if (!currentVersion || currentVersion !== metadata.version) await this.updateServer(metadata.version);
-			if (metadata.resourcePack) await this.enableResourcePack(metadata.resourcePack);
-			else await this.disableResourcePack();
-		}
+		const currentVersion = await this.version();
+		if (!currentVersion || currentVersion !== metadata.version) await this.updateServer(metadata.version);
+		if (metadata.resourcePack) await this.enableResourcePack(metadata.resourcePack);
+		else await this.disableResourcePack();
 	}
 
 	async waitForServer(timeoutMs: number): Promise<void> {
@@ -128,14 +125,12 @@ export default class MinecraftServer extends Service {
 		});
 	}
 
-	private async metadata(): Promise<RaspberryPi.MinecraftServerMetadata | null> {
+	private async metadata(): Promise<RaspberryPi.MinecraftServerMetadata> {
 		const response = await Axios.get<RaspberryPi.MinecraftServerMetadata>(
 			`${process.env.MINECRAFT_METADATA_URL}/servers/${this.serverName}.json`,
-			{ validateStatus: (status) => (status >= 200 && status < 300) || status == 404 },
 		);
 
-		if (response.status === 404) return null;
-		else return response.data;
+		return response.data;
 	}
 
 	private async updateServer(version: string): Promise<void> {
