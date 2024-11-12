@@ -16,6 +16,8 @@ const event: RaspberryPi.Event = {
 					try {
 						await command.run(interaction);
 					} catch (err) {
+						console.error(err);
+
 						if (interaction.replied) {
 							interaction
 								.followUp({
