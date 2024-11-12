@@ -180,6 +180,7 @@ const command: RaspberryPi.Command = {
 					});
 				} catch (err) {
 					console.error(err);
+
 					interaction.editReply({
 						embeds: [
 							{

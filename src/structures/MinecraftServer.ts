@@ -107,12 +107,12 @@ export default class MinecraftServer extends Service {
 
 	async waitForServer(timeoutMs: number): Promise<void> {
 		return new Promise((resolve, reject) => {
-			setTimeout(reject, timeoutMs);
+			setTimeout(() => reject(new Error("Waiting for server timed out")), timeoutMs);
 
 			const journalctl = ChildProcess.spawn("journalctl", ["--user", `--unit=${this.name}`, "--follow", "--no-pager"]);
-
-			journalctl.on("exit", reject);
+			journalctl.on("exit", () => reject(new Error("Child process journalctl ended unexpectedly")));
 			journalctl.on("error", reject);
+
 			journalctl.on("message", (message) => {
 				if (/Done \(\d+\.\d+s\)!/.test(message.toString())) resolve();
 			});
