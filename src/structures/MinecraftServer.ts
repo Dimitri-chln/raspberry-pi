@@ -113,10 +113,8 @@ export default class MinecraftServer extends Service {
 			journalctl.on("exit", () => reject(new Error("Child process journalctl ended unexpectedly")));
 			journalctl.on("error", reject);
 
-			journalctl.on("message", (message) => {
-				console.log(message);
-				console.log(message.toString());
-				if (/Done \(\d+\.\d+s\)!/.test(message.toString())) resolve();
+			journalctl.stdout.on("data", (data) => {
+				if (/Done \(\d+\.\d+s\)!/.test(data)) resolve();
 			});
 		});
 	}
