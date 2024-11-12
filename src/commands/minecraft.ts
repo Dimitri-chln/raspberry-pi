@@ -126,7 +126,7 @@ const command: RaspberryPi.Command = {
 				}
 
 				const onlineServers = Util.minecraftServers.filter((s) => s.isActive());
-				if (onlineServers.size >= Util.config.MAX_MINECRAFT_ONLINE_SERVERS) {
+				if (onlineServers.size >= Util.config.MAX_ONLINE_MINECRAFT_SERVERS) {
 					interaction.reply({
 						content: "Le nombre maximal de serveurs en ligne a été atteint",
 						ephemeral: true,
