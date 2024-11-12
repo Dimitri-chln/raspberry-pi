@@ -82,7 +82,7 @@ export default class MinecraftServer extends Service {
 
 		// Load version and resource-pack
 		const metadata = await this.metadata();
-		const backupMetadata = metadata.backups?.[name];
+		const backupMetadata = metadata.backups?.find((backupMetadata) => backupMetadata.name === name);
 		if (!backupMetadata) throw new Error("No metadata found for backup");
 
 		const currentVersion = await this.version();
