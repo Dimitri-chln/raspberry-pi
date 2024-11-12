@@ -129,7 +129,7 @@ export default class MinecraftServer extends Service {
 	private async enableResourcePack(resourcePack?: RaspberryPi.MinecraftResourcePackMetadata): Promise<void> {
 		const serverProperties = await this.serverProperties();
 
-		const resourcePackUrl = `${process.env.MINECRAFT_MANIFEST_URL}/resource-packs/${resourcePack.uuid}.zip`;
+		const resourcePackUrl = `${process.env.MINECRAFT_METADATA_URL}/resource-packs/${resourcePack.uuid}.zip`;
 		serverProperties.set("require-resource-pack", true);
 		serverProperties.set("resource-pack", resourcePackUrl.replace(/[:=]/g, "\\$1"));
 		serverProperties.set("resource-pack-id", resourcePack.uuid);
