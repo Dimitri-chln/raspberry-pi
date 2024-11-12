@@ -114,6 +114,8 @@ export default class MinecraftServer extends Service {
 			journalctl.on("error", reject);
 
 			journalctl.on("message", (message) => {
+				console.log(message);
+				console.log(message.toString());
 				if (/Done \(\d+\.\d+s\)!/.test(message.toString())) resolve();
 			});
 		});
