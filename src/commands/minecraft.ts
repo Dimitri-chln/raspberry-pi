@@ -159,8 +159,7 @@ const command: RaspberryPi.Command = {
 					],
 				});
 
-				if (backup) await minecraftServer.loadBackup(backup);
-				else await minecraftServer.loadWorld();
+				const version = backup ? await minecraftServer.loadBackup(backup) : await minecraftServer.loadWorld();
 
 				try {
 					await minecraftServer.start();
@@ -174,7 +173,7 @@ const command: RaspberryPi.Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès`,
+								description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès\n> Version: \`${version}\``,
 							},
 						],
 					});

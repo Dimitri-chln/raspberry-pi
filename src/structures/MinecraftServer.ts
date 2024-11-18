@@ -8,6 +8,8 @@ import Axios from "axios";
 
 import ServerProperties from "./MinecraftServerProperties";
 
+type Version = string;
+
 export default class MinecraftServer extends Service {
 	/**
 	 * The name of the server
@@ -40,7 +42,7 @@ export default class MinecraftServer extends Service {
 		await FsAsync.writeFile(Path.join(this.serverDirectory, "server.properties"), serverProperties.stringify());
 	}
 
-	private async version(): Promise<string | null> {
+	private async version(): Promise<Version | null> {
 		const versionFilePath = Path.join(this.serverDirectory, "version");
 		if (!Fs.existsSync(versionFilePath)) return null;
 
@@ -49,7 +51,7 @@ export default class MinecraftServer extends Service {
 		});
 	}
 
-	private async saveVersion(version: string): Promise<void> {
+	private async saveVersion(version: Version): Promise<void> {
 		await FsAsync.writeFile(Path.join(this.serverDirectory, "version.lock"), version);
 	}
 
@@ -72,7 +74,7 @@ export default class MinecraftServer extends Service {
 		return backupName;
 	}
 
-	async loadBackup(name: string): Promise<void> {
+	async loadBackup(name: string): Promise<Version> {
 		const backups = await this.backups();
 		if (!backups.includes(name)) throw new Error("Invalid backup");
 
@@ -89,9 +91,11 @@ export default class MinecraftServer extends Service {
 		if (!currentVersion || currentVersion !== backupMetadata.version) await this.updateServer(backupMetadata.version);
 		if (backupMetadata.resourcePack) await this.enableResourcePack(backupMetadata.resourcePack);
 		else await this.disableResourcePack();
+
+		return this.version();
 	}
 
-	async loadWorld(): Promise<void> {
+	async loadWorld(): Promise<Version> {
 		const serverProperties = await this.serverProperties();
 		serverProperties.set("level-name", "world");
 		await this.saveServerProperties(serverProperties);
@@ -103,6 +107,8 @@ export default class MinecraftServer extends Service {
 		if (!currentVersion || currentVersion !== metadata.version) await this.updateServer(metadata.version);
 		if (metadata.resourcePack) await this.enableResourcePack(metadata.resourcePack);
 		else await this.disableResourcePack();
+
+		return this.version();
 	}
 
 	async waitForServer(timeoutMs: number): Promise<void> {
@@ -133,7 +139,7 @@ export default class MinecraftServer extends Service {
 		return response.data;
 	}
 
-	private async updateServer(version: string): Promise<void> {
+	private async updateServer(version: Version): Promise<void> {
 		const versionArg = version === "latest" ? "" : version;
 
 		return new Promise((resolve, reject) => {
