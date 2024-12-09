@@ -23,12 +23,17 @@ export default class MinecraftServer extends Service {
 	 * The name of the directory where the server backups are saved
 	 */
 	readonly backupsDirectory: string;
+	/**
+	 * The name of the directory where the version file is saved
+	 */
+	readonly versionFile: string;
 
 	constructor(name: string) {
 		super(`minecraft@${name}`);
 		this.serverName = name;
 		this.serverDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name);
-		this.backupsDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name, "backups");
+		this.backupsDirectory = Path.join(this.serverDirectory, "backups");
+		this.versionFile = Path.join(this.serverDirectory, "version.lock");
 	}
 
 	private async serverProperties(): Promise<ServerProperties> {
@@ -43,14 +48,12 @@ export default class MinecraftServer extends Service {
 	}
 
 	private async version(): Promise<Version | null> {
-		const versionFilePath = Path.join(this.serverDirectory, "version.lock");
-		if (!Fs.existsSync(versionFilePath)) return null;
-
-		return await FsAsync.readFile(versionFilePath, { encoding: "utf8" });
+		if (!Fs.existsSync(this.versionFile)) return null;
+		return await FsAsync.readFile(this.versionFile, { encoding: "utf8" });
 	}
 
 	private async saveVersion(version: Version): Promise<void> {
-		await FsAsync.writeFile(Path.join(this.serverDirectory, "version.lock"), version);
+		await FsAsync.writeFile(this.versionFile, version);
 	}
 
 	async backups(): Promise<string[]> {
