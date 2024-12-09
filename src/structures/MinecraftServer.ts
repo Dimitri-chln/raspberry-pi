@@ -43,12 +43,10 @@ export default class MinecraftServer extends Service {
 	}
 
 	private async version(): Promise<Version | null> {
-		const versionFilePath = Path.join(this.serverDirectory, "version");
+		const versionFilePath = Path.join(this.serverDirectory, "version.lock");
 		if (!Fs.existsSync(versionFilePath)) return null;
 
-		return await FsAsync.readFile(Path.join(this.serverDirectory, "version.lock"), {
-			encoding: "utf8",
-		});
+		return await FsAsync.readFile(versionFilePath, { encoding: "utf8" });
 	}
 
 	private async saveVersion(version: Version): Promise<void> {
