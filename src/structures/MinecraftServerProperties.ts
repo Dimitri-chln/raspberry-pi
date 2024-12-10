@@ -5,8 +5,8 @@ export default class ServerProperties {
 		this._data = this._parse(file);
 	}
 
-	get(property: keyof RaspberryPi.MinecraftServerProperties) {
-		return this._data[property];
+	get<K extends keyof RaspberryPi.MinecraftServerProperties>(property: K): RaspberryPi.MinecraftServerProperties[K] {
+		return this._data[property] as RaspberryPi.MinecraftServerProperties[K];
 	}
 
 	set<K extends keyof RaspberryPi.MinecraftServerProperties>(
