@@ -32,7 +32,7 @@ namespace RaspberryPi {
 		name: string;
 		type: ApplicationCommandOptionType.String;
 		filterType: "STARTS_WITH" | "CONTAINS";
-		run: (interaction: AutocompleteInteraction, value: string) => Promise<ApplicationCommandOptionChoiceData[]>;
+		run: (interaction: AutocompleteInteraction, value: string) => Promise<ApplicationCommandOptionChoice[]>;
 	}
 
 	interface AutocompleteHandlerNumberOption {
