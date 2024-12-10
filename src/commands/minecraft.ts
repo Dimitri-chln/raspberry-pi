@@ -173,7 +173,9 @@ const command: RaspberryPi.Command = {
 									icon_url: interaction.client.user.displayAvatarURL(),
 								},
 								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès\n> Version: \`${version}\``,
+								description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès${
+									backup ? `\n> Backup: \`${backup}\`` : ""
+								}\n> Version: \`${version}\``,
 							},
 						],
 					});
