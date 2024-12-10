@@ -2,8 +2,6 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType } from "discord.js";
 
-import { MinecraftResourcePack } from "../types/enums";
-
 const command: RaspberryPi.Command = {
 	name: "minecraft",
 	description: "Gérer les serveurs Minecraft de la Raspberry",
