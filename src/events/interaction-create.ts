@@ -41,7 +41,6 @@ const event: RaspberryPi.Event = {
 
 			case InteractionType.ApplicationCommandAutocomplete: {
 				const autocompleteHandler = Util.autocompleteHandlers.get(interaction.commandName);
-
 				if (!autocompleteHandler) return;
 
 				const subCommandGroup = interaction.options.getSubcommandGroup(false);
