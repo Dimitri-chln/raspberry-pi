@@ -127,6 +127,8 @@ namespace RaspberryPi {
 		"white-list": boolean;
 	}
 
+	type MinecraftServerVersion = string;
+
 	interface MinecraftResourcePackMetadata {
 		uuid: string;
 		checksum: string;
@@ -134,13 +136,13 @@ namespace RaspberryPi {
 
 	interface MinecraftServerBackupMetadata {
 		name: string;
-		version: string;
+		version: MinecraftServerVersion;
 		resourcePack?: MinecraftResourcePackMetadata;
 	}
 
 	interface MinecraftServerMetadata {
 		name: string;
-		version: string;
+		version: MinecraftServerVersion;
 		resourcePack?: MinecraftResourcePackMetadata;
 		backups: MinecraftServerBackupMetadata[];
 	}

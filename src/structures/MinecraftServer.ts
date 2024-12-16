@@ -8,8 +8,6 @@ import Axios from "axios";
 
 import ServerProperties from "./MinecraftServerProperties";
 
-type Version = string;
-
 export default class MinecraftServer extends Service {
 	/**
 	 * The name of the server
@@ -47,12 +45,12 @@ export default class MinecraftServer extends Service {
 		await FsAsync.writeFile(Path.join(this.serverDirectory, "server.properties"), serverProperties.stringify());
 	}
 
-	private async version(): Promise<Version | null> {
+	private async version(): Promise<RaspberryPi.MinecraftServerVersion | null> {
 		if (!Fs.existsSync(this.versionFile)) return null;
 		return await FsAsync.readFile(this.versionFile, { encoding: "utf8" });
 	}
 
-	private async saveVersion(version: Version): Promise<void> {
+	private async saveVersion(version: RaspberryPi.MinecraftServerVersion): Promise<void> {
 		await FsAsync.writeFile(this.versionFile, version);
 	}
 
@@ -75,7 +73,7 @@ export default class MinecraftServer extends Service {
 		return backupName;
 	}
 
-	async loadBackup(name: string): Promise<Version> {
+	async loadBackup(name: string): Promise<RaspberryPi.MinecraftServerVersion> {
 		const backups = await this.backups();
 		if (!backups.includes(name)) throw new Error("Invalid backup");
 
@@ -96,7 +94,7 @@ export default class MinecraftServer extends Service {
 		return this.version();
 	}
 
-	async loadWorld(): Promise<Version> {
+	async loadWorld(): Promise<RaspberryPi.MinecraftServerVersion> {
 		const serverProperties = await this.serverProperties();
 		serverProperties.set("level-name", "world");
 		await this.saveServerProperties(serverProperties);
@@ -140,7 +138,7 @@ export default class MinecraftServer extends Service {
 		return response.data;
 	}
 
-	private async updateServer(version: Version): Promise<void> {
+	private async updateServer(version: RaspberryPi.MinecraftServerVersion): Promise<void> {
 		const versionArg = version === "latest" ? "" : version;
 
 		return new Promise((resolve, reject) => {
