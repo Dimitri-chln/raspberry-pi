@@ -50,16 +50,16 @@ namespace RaspberryPi {
 
 	namespace Events {
 		interface Service {
-			started: [];
-			stopped: [];
-			restarted: [];
-			reloaded: [];
+			start: [];
+			stop: [];
+			restart: [];
+			reload: [];
 			log: [string];
 		}
 
 		interface MinecraftServer {
 			loading: [number];
-			loaded: [];
+			load: [];
 		}
 	}
 

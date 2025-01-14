@@ -33,6 +33,9 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 		this.serverDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name);
 		this.backupsDirectory = Path.join(this.serverDirectory, "backups");
 		this.versionFile = Path.join(this.serverDirectory, "version.lock");
+
+		this.on("loading", (progress) => console.log(`Minecraft server ${this.serverName} is loading: ${progress}`));
+		this.on("load", () => console.log(`Minecraft server ${this.serverName} is loaded`));
 	}
 
 	private async serverProperties(): Promise<ServerProperties> {
@@ -118,16 +121,19 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 		return new Promise((resolve, reject) => {
 			this.watchLogs();
 
-			this.on("log", (log) => {
+			let logCallback = (log: string) => {
 				const [, progress] = log.match(PROGRESS_REGEX);
 				if (progress) this.emit("loading", parseInt(progress));
 
 				if (DONE_REGEX.test(log)) {
 					this.stopLogs();
-					this.emit("loaded");
+					this.off("log", logCallback);
+					this.emit("load");
 					resolve();
 				}
-			});
+			};
+
+			this.on("log", logCallback);
 		});
 	}
 

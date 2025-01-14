@@ -23,6 +23,11 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 
 		super();
 		this.name = name;
+
+		this.on("start", () => console.log(`Service ${this.name} started`));
+		this.on("stop", () => console.log(`Service ${this.name} stopped`));
+		this.on("restart", () => console.log(`Service ${this.name} restarted`));
+		this.on("reload", () => console.log(`Service ${this.name} reloaded`));
 	}
 
 	get pid() {
@@ -42,7 +47,7 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 				ChildProcess.exec(`systemctl --user show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
 					if (error) return reject(error);
 					this._pid = parseInt(stdout);
-					this.emit("started");
+					this.emit("start");
 					resolve();
 				});
 			});
@@ -54,7 +59,7 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 			ChildProcess.exec(`systemctl --user stop ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
 				this._pid = null;
-				this.emit("stopped");
+				this.emit("stop");
 				resolve();
 			});
 		});
@@ -68,7 +73,7 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 				ChildProcess.exec(`systemctl --user show --property MainPID --value ${this.name}`, (error, stdout, stderr) => {
 					if (error) return reject(error);
 					this._pid = parseInt(stdout);
-					this.emit("restarted");
+					this.emit("restart");
 					resolve();
 				});
 			});
@@ -79,7 +84,7 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 		return new Promise((resolve, reject) => {
 			ChildProcess.exec(`systemctl --user reload ${this.name}`, (error, stdout, stderr) => {
 				if (error) return reject(error);
-				this.emit("reloaded");
+				this.emit("reload");
 				resolve();
 			});
 		});
@@ -114,5 +119,6 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 
 	stopLogs(): void {
 		this.logWatcher.kill();
+		this.logWatcher = null;
 	}
 }
