@@ -10,11 +10,11 @@ import MinecraftServer from "./structures/MinecraftServer";
 export default class Util {
 	static readonly config = config;
 
-	static readonly services: Collection<string, Service> = new Collection(
+	static readonly services: Collection<string, Service<{}>> = new Collection(
 		Fs.readdirSync(process.env.SERVICES_PATH)
 			.map((serviceGroupName) =>
 				Fs.readdirSync(Path.join(process.env.SERVICES_PATH, serviceGroupName)).map(
-					(serviceName) => [serviceName, new Service(serviceName)] as [string, Service],
+					(serviceName) => [serviceName, new Service(serviceName)] as [string, Service<{}>],
 				),
 			)
 			.flat(),
@@ -47,6 +47,6 @@ export default class Util {
 		},
 	});
 
-	static readonly commands: Collection<string, RaspberryPi.Command> = new Collection();
-	static readonly autocompleteHandlers: Collection<string, RaspberryPi.AutocompleteHandler> = new Collection();
+	static readonly commands: Collection<string, RaspberryPi.Discord.Command> = new Collection();
+	static readonly autocompleteHandlers: Collection<string, RaspberryPi.Discord.AutocompleteHandler> = new Collection();
 }
