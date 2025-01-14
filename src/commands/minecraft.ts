@@ -2,7 +2,7 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType } from "discord.js";
 
-const command: RaspberryPi.Command = {
+const command: RaspberryPi.Discord.Command = {
 	name: "minecraft",
 	description: "Gérer les serveurs Minecraft de la Raspberry",
 	options: [
@@ -161,21 +161,40 @@ const command: RaspberryPi.Command = {
 
 				try {
 					await minecraftServer.start();
-					await minecraftServer.waitForServer(30_000);
+					minecraftServer.waitForServer();
 
-					interaction.editReply({
-						embeds: [
-							{
-								author: {
-									name: "Serveurs Minecraft",
-									icon_url: interaction.client.user.displayAvatarURL(),
+					minecraftServer.on("loading", (progress) => {
+						interaction.editReply({
+							embeds: [
+								{
+									author: {
+										name: "Serveurs Minecraft",
+										icon_url: interaction.client.user.displayAvatarURL(),
+									},
+									color: Util.config.DEFAULT_EMBED_COLOR,
+									description: `Le serveur **\`${minecraftServerName}\`** est en cours de lancement ${loadingEmoji}\n> Chargement: ${"█".repeat(
+										progress / 5,
+									)}${"░".repeat(progress / 5)} (${progress}%)`,
 								},
-								color: Util.config.DEFAULT_EMBED_COLOR,
-								description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès${
-									backup ? `\n> Backup: \`${backup}\`` : ""
-								}\n> Version: \`${version}\``,
-							},
-						],
+							],
+						});
+					});
+
+					minecraftServer.on("loaded", () => {
+						interaction.editReply({
+							embeds: [
+								{
+									author: {
+										name: "Serveurs Minecraft",
+										icon_url: interaction.client.user.displayAvatarURL(),
+									},
+									color: Util.config.DEFAULT_EMBED_COLOR,
+									description: `Le serveur **\`${minecraftServerName}\`** a été lancé avec succès${
+										backup ? `\n> Backup: \`${backup}\`` : ""
+									}\n> Version: \`${version}\``,
+								},
+							],
+						});
 					});
 				} catch (err) {
 					console.error(err);

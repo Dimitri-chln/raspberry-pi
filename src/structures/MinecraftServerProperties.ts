@@ -1,17 +1,17 @@
 export default class ServerProperties {
-	private _data: Partial<RaspberryPi.MinecraftServerProperties>;
+	private _data: Partial<RaspberryPi.Minecraft.ServerProperties>;
 
 	constructor(file: string) {
 		this._data = this._parse(file);
 	}
 
-	get<K extends keyof RaspberryPi.MinecraftServerProperties>(property: K): RaspberryPi.MinecraftServerProperties[K] {
-		return this._data[property] as RaspberryPi.MinecraftServerProperties[K];
+	get<K extends keyof RaspberryPi.Minecraft.ServerProperties>(property: K): RaspberryPi.Minecraft.ServerProperties[K] {
+		return this._data[property] as RaspberryPi.Minecraft.ServerProperties[K];
 	}
 
-	set<K extends keyof RaspberryPi.MinecraftServerProperties>(
+	set<K extends keyof RaspberryPi.Minecraft.ServerProperties>(
 		property: K,
-		value: RaspberryPi.MinecraftServerProperties[K],
+		value: RaspberryPi.Minecraft.ServerProperties[K],
 	) {
 		this._data[property] = value;
 	}
@@ -30,8 +30,8 @@ export default class ServerProperties {
 		return headerComments + output.join("\n");
 	}
 
-	private _parse(input: string): Partial<RaspberryPi.MinecraftServerProperties> {
-		const output: Partial<RaspberryPi.MinecraftServerProperties> = {};
+	private _parse(input: string): Partial<RaspberryPi.Minecraft.ServerProperties> {
+		const output: Partial<RaspberryPi.Minecraft.ServerProperties> = {};
 
 		input.split(/[\r\n]+/g).forEach((line) => {
 			if (line[0] === "#" || line.indexOf("=") < 0) return; // just a comment

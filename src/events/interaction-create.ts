@@ -2,7 +2,7 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType, Interaction, InteractionType } from "discord.js";
 
-const event: RaspberryPi.Event = {
+const event: RaspberryPi.Discord.Event = {
 	name: "interactionCreate",
 	once: false,
 

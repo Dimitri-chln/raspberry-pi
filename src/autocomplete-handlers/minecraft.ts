@@ -2,7 +2,7 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType } from "discord.js";
 
-const autocompleteHandler: RaspberryPi.AutocompleteHandler = {
+const autocompleteHandler: RaspberryPi.Discord.AutocompleteHandler = {
 	name: "minecraft",
 	options: [
 		{

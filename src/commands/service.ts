@@ -2,7 +2,7 @@ import Util from "../Util";
 
 import { ApplicationCommandOptionType } from "discord.js";
 
-const command: RaspberryPi.Command = {
+const command: RaspberryPi.Discord.Command = {
 	name: "service",
 	description: "Gérer les services de la Raspberry",
 	options: [

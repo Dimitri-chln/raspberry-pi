@@ -1,6 +1,6 @@
 import Util from "../Util";
 
-const event: RaspberryPi.Event = {
+const event: RaspberryPi.Discord.Event = {
 	name: "error",
 	once: false,
 

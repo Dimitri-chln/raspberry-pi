@@ -8,7 +8,7 @@ import Axios from "axios";
 
 import ServerProperties from "./MinecraftServerProperties";
 
-export default class MinecraftServer extends Service {
+export default class MinecraftServer extends Service<RaspberryPi.Events.MinecraftServer> {
 	/**
 	 * The name of the server
 	 */
@@ -28,6 +28,7 @@ export default class MinecraftServer extends Service {
 
 	constructor(name: string) {
 		super(`minecraft@${name}`);
+
 		this.serverName = name;
 		this.serverDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name);
 		this.backupsDirectory = Path.join(this.serverDirectory, "backups");
@@ -45,12 +46,12 @@ export default class MinecraftServer extends Service {
 		await FsAsync.writeFile(Path.join(this.serverDirectory, "server.properties"), serverProperties.stringify());
 	}
 
-	private async version(): Promise<RaspberryPi.MinecraftServerVersion | null> {
+	private async version(): Promise<RaspberryPi.Minecraft.ServerVersion | null> {
 		if (!Fs.existsSync(this.versionFile)) return null;
 		return await FsAsync.readFile(this.versionFile, { encoding: "utf8" });
 	}
 
-	private async saveVersion(version: RaspberryPi.MinecraftServerVersion): Promise<void> {
+	private async saveVersion(version: RaspberryPi.Minecraft.ServerVersion): Promise<void> {
 		await FsAsync.writeFile(this.versionFile, version);
 	}
 
@@ -73,7 +74,7 @@ export default class MinecraftServer extends Service {
 		return backupName;
 	}
 
-	async loadBackup(name: string): Promise<RaspberryPi.MinecraftServerVersion> {
+	async loadBackup(name: string): Promise<RaspberryPi.Minecraft.ServerVersion> {
 		const backups = await this.backups();
 		if (!backups.includes(name)) throw new Error("Invalid backup");
 
@@ -94,7 +95,7 @@ export default class MinecraftServer extends Service {
 		return this.version();
 	}
 
-	async loadWorld(): Promise<RaspberryPi.MinecraftServerVersion> {
+	async loadWorld(): Promise<RaspberryPi.Minecraft.ServerVersion> {
 		const serverProperties = await this.serverProperties();
 		serverProperties.set("level-name", "world");
 		await this.saveServerProperties(serverProperties);
@@ -110,35 +111,35 @@ export default class MinecraftServer extends Service {
 		return this.version();
 	}
 
-	async waitForServer(timeoutMs: number): Promise<void> {
-		return new Promise((resolve, reject) => {
-			const journalctl = ChildProcess.spawn("journalctl", ["--user", `--unit=${this.name}`, "--follow", "--no-pager"]);
-			journalctl.on("exit", () => reject(new Error("Child process journalctl ended unexpectedly")));
-			journalctl.on("error", reject);
+	async waitForServer(): Promise<void> {
+		const PROGRESS_REGEX = /Preparing spawn area: (\d+)%/;
+		const DONE_REGEX = /Done \(\d+\.\d+s\)!/;
 
-			journalctl.stdout.on("data", (data) => {
-				if (/Done \(\d+\.\d+s\)!/.test(data)) {
-					journalctl.kill();
+		return new Promise((resolve, reject) => {
+			this.watchLogs();
+
+			this.on("log", (log) => {
+				const [, progress] = log.match(PROGRESS_REGEX);
+				if (progress) this.emit("loading", parseInt(progress));
+
+				if (DONE_REGEX.test(log)) {
+					this.stopLogs();
+					this.emit("loaded");
 					resolve();
 				}
 			});
-
-			setTimeout(() => {
-				journalctl.kill();
-				reject(new Error("Waiting for server timed out"));
-			}, timeoutMs);
 		});
 	}
 
-	private async metadata(): Promise<RaspberryPi.MinecraftServerMetadata> {
-		const response = await Axios.get<RaspberryPi.MinecraftServerMetadata>(
+	private async metadata(): Promise<RaspberryPi.Minecraft.ServerMetadata> {
+		const response = await Axios.get<RaspberryPi.Minecraft.ServerMetadata>(
 			`${process.env.MINECRAFT_METADATA_URL}/servers/${this.serverName}.json`,
 		);
 
 		return response.data;
 	}
 
-	private async updateServer(version: RaspberryPi.MinecraftServerVersion): Promise<void> {
+	private async updateServer(version: RaspberryPi.Minecraft.ServerVersion): Promise<void> {
 		const versionArg = version === "latest" ? "" : version;
 
 		return new Promise((resolve, reject) => {
@@ -153,7 +154,7 @@ export default class MinecraftServer extends Service {
 		});
 	}
 
-	private async enableResourcePack(resourcePack?: RaspberryPi.MinecraftResourcePackMetadata): Promise<void> {
+	private async enableResourcePack(resourcePack?: RaspberryPi.Minecraft.ResourcePackMetadata): Promise<void> {
 		const serverProperties = await this.serverProperties();
 
 		const resourcePackUrl = `${process.env.MINECRAFT_METADATA_URL}/resource-packs/${resourcePack.uuid}.zip`;

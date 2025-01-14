@@ -1,7 +1,7 @@
 import { ApplicationCommandData, ApplicationCommandType, Client } from "discord.js";
 import Util from "../Util";
 
-const event: RaspberryPi.Event = {
+const event: RaspberryPi.Discord.Event = {
 	name: "ready",
 	once: false,
 
