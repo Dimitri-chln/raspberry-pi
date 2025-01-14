@@ -105,15 +105,14 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 	watchLogs(): void {
 		this.logWatcher = ChildProcess.spawn("journalctl", ["--user", `--unit=${this.name}`, "--follow", "--no-pager"]);
 
-		this.logWatcher.on("exit", () => {
-			throw new Error("Child process journalctl ended unexpectedly");
-		});
 		this.logWatcher.on("error", (error) => {
 			throw new Error(`Child process journalctl encountered an error: ${error}`);
 		});
 
-		this.logWatcher.stdout.on("data", (data) => {
-			this.emit("log", data);
+		this.logWatcher.stdout.on("data", (data: Buffer) => {
+			for (const line of data.toString("utf8").split("\n")) {
+				this.emit("log", line);
+			}
 		});
 	}
 
