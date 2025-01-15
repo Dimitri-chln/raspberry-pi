@@ -174,7 +174,7 @@ const command: RaspberryPi.Discord.Command = {
 									color: Util.config.DEFAULT_EMBED_COLOR,
 									description: `Le serveur **\`${minecraftServerName}\`** est en cours de lancement ${loadingEmoji}\n> Chargement: ${"█".repeat(
 										progress / 5,
-									)}${"░".repeat(100 - progress / 5)} (${progress}%)`,
+									)}${"░".repeat((100 - progress) / 5)} (${progress}%)`,
 								},
 							],
 						});
