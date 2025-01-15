@@ -34,7 +34,6 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 		this.backupsDirectory = Path.join(this.serverDirectory, "backups");
 		this.versionFile = Path.join(this.serverDirectory, "version.lock");
 
-		this.on("loading", (progress) => console.log(`Minecraft server ${this.serverName} is loading: ${progress}`));
 		this.on("load", () => console.log(`Minecraft server ${this.serverName} is loaded`));
 	}
 
