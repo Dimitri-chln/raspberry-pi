@@ -121,15 +121,15 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 			this.watchLogs();
 
 			let logCallback = (log: string) => {
-				const [, progress] = log.match(PROGRESS_REGEX) ?? [];
-				if (progress) this.emit("loading", parseInt(progress));
-
 				if (DONE_REGEX.test(log)) {
 					this.stopLogs();
 					this.off("log", logCallback);
 					this.emit("load");
-					resolve();
+					return resolve();
 				}
+
+				const [, progress] = log.match(PROGRESS_REGEX) ?? [];
+				if (progress) this.emit("loading", parseInt(progress));
 			};
 
 			this.on("log", logCallback);
