@@ -50,11 +50,11 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 
 	private async version(): Promise<RaspberryPi.Minecraft.ServerVersion | null> {
 		if (!Fs.existsSync(this.versionFile)) return null;
-		return await FsAsync.readFile(this.versionFile, { encoding: "utf8" });
+		return (await FsAsync.readFile(this.versionFile, { encoding: "utf8" })).trim();
 	}
 
 	private async saveVersion(version: RaspberryPi.Minecraft.ServerVersion): Promise<void> {
-		await FsAsync.writeFile(this.versionFile, version);
+		await FsAsync.writeFile(this.versionFile, version + "\n");
 	}
 
 	async backups(): Promise<string[]> {
