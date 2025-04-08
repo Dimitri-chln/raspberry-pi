@@ -1,4 +1,4 @@
-import Fs from "node:fs";
+import FsAsync from "node:fs/promises";
 import Path from "node:path";
 
 import Util from "../Util";
@@ -8,7 +8,7 @@ const task: RaspberryPi.Task = {
 	intervalMs: 10_000,
 
 	async action() {
-		const minecraftServerNames = Fs.readdirSync(Path.join(process.env.MINECRAFT_PATH, "servers"));
+		const minecraftServerNames = await FsAsync.readdir(Path.join(process.env.MINECRAFT_PATH, "servers"));
 
 		// Remove Minecraft servers that don't exist anymore
 		Util.minecraftServers.sweep((_, minecraftServerName) => !minecraftServerNames.includes(minecraftServerName));
