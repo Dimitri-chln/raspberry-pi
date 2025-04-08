@@ -38,3 +38,12 @@ eventFiles.forEach((file) => {
 
 // Login
 Util.client.login(process.env.DISCORD_TOKEN);
+
+// Tasks
+const taskFiles = Fs.readdirSync(Path.resolve(__dirname, "tasks"));
+taskFiles.forEach((file) => {
+	const path = Path.resolve(__dirname, "tasks", file);
+	const task: RaspberryPi.Task = require(path).default ?? require(path);
+
+	setInterval(task.action, task.intervalMs);
+});

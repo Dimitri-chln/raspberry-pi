@@ -163,7 +163,7 @@ const command: RaspberryPi.Discord.Command = {
 					await minecraftServer.start();
 					minecraftServer.waitForServer();
 
-					let loadingCallback = (progress: number) => {
+					const loadingCallback = (progress: number) => {
 						interaction.editReply({
 							embeds: [
 								{
@@ -181,7 +181,7 @@ const command: RaspberryPi.Discord.Command = {
 					};
 
 					minecraftServer.on("loading", loadingCallback);
-					minecraftServer.once("load", () => {
+					minecraftServer.once("loaded", () => {
 						minecraftServer.off("loading", loadingCallback);
 
 						interaction.editReply({

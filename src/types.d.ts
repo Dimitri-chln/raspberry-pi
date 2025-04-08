@@ -59,7 +59,7 @@ namespace RaspberryPi {
 
 		interface MinecraftServer {
 			loading: [number];
-			load: [];
+			loaded: [];
 		}
 	}
 
@@ -164,5 +164,10 @@ namespace RaspberryPi {
 			resourcePack?: ResourcePackMetadata;
 			backups: ServerBackupMetadata[];
 		}
+	}
+
+	interface Task {
+		intervalMs: number;
+		action: () => Promise<void>;
 	}
 }
