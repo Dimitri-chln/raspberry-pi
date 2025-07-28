@@ -18,7 +18,7 @@ export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]
 	private logWatcher: ChildProcess.ChildProcess;
 
 	constructor(name: string) {
-		if (!/^[\w-]+(?:@[\w+-]+)?$/.test(name))
+		if (!/^[\w-]+(?:@[\w+-]+)?(?:\.(?:service|timer))?$/.test(name))
 			throw new Error(`Name must only contain alphanumeric characters and dashes (-), received "${name}"`);
 
 		super();
