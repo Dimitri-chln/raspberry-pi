@@ -160,6 +160,7 @@ const command: RaspberryPi.Discord.Command = {
 				const version = backup ? await minecraftServer.loadBackup(backup) : await minecraftServer.loadWorld();
 
 				try {
+					await minecraftServer.timerService.start();
 					await minecraftServer.start();
 					minecraftServer.waitForServer();
 
@@ -252,6 +253,7 @@ const command: RaspberryPi.Discord.Command = {
 				});
 
 				try {
+					await minecraftServer.timerService.stop();
 					await minecraftServer.stop();
 
 					interaction.editReply({

@@ -1,7 +1,7 @@
 import ChildProcess from "node:child_process";
 import EventEmitter from "node:events";
 
-export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]>> extends EventEmitter<
+export default class Service<ExtraEvents extends Record<keyof ExtraEvents, any[]> = {}> extends EventEmitter<
 	RaspberryPi.Events.Service | ExtraEvents
 > {
 	/**

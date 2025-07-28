@@ -25,6 +25,10 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 	 * The name of the directory where the version file is saved
 	 */
 	readonly versionFile: string;
+	/**
+	 * The timer service that will restart the server daily
+	 */
+	readonly timerService: Service;
 
 	constructor(name: string) {
 		super(`minecraft@${name}`);
@@ -33,6 +37,7 @@ export default class MinecraftServer extends Service<RaspberryPi.Events.Minecraf
 		this.serverDirectory = Path.join(process.env.MINECRAFT_PATH, "servers", name);
 		this.backupsDirectory = Path.join(this.serverDirectory, "backups");
 		this.versionFile = Path.join(this.serverDirectory, "version.lock");
+		this.timerService = new Service(`minecraft-restart@${name}.timer`);
 
 		this.on("loading", (progress) => console.log(`Minecraft server ${this.serverName} is loading: ${progress}%`));
 		this.on("loaded", () => console.log(`Minecraft server ${this.serverName} is loaded`));
